@@ -1,9 +1,22 @@
 # Атласы невидимого
 
-Обложка серии интерактивных научных атласов. Статичный сайт без сборки:
-`index.html`, `style.css`, `main.js` (Three.js подключается через import map, только для 3D-полки).
+Обложка серии интерактивных научных атласов: шесть томов, каждый — в своей эпохе печати.
+Статичный сайт без сборки: `index.html`, `style.css`, `main.js`
+(Three.js подключается через import map, только для 3D-полки).
 
-Тома перечислены в массиве `VOLUMES` в начале `main.js`. Чтобы «выпустить» том,
-впишите ему `url` — кнопка станет активной, а штамп сменится на «выдано».
+| Том | Название | Адрес |
+|---|---|---|
+| I | HAEMA — Кровь и вирусы | https://dmitrylelee.github.io/hiv/ |
+| II | MYCELIUM — Подземная сеть | https://dmitrylelee.github.io/MYCELIUM/ |
+| III | Ночная смена — Сон и мозг | https://dmitrylelee.github.io/sleep/ |
+| IV | Кабинет восприятия — Как устроен разум | https://dmitrylelee.github.io/night_dev/ |
+| V | Кабинет восприятия — Испытуемый | https://dmitrylelee.github.io/psycho/ |
+| VI | BLOB — Слизевик | https://dmitrylelee.github.io/blob/ |
+
+Тома перечислены в массиве `VOLUMES` в начале `main.js`. У тома без `url` кнопка
+неактивна и стоит статус «в печати».
+
+После правок увеличьте номер версии `?v=` у `style.css` и `main.js` в `index.html`,
+чтобы браузеры не держали старые файлы из кэша GitHub Pages.
 
 Локально: `npx http-server .` и открыть http://localhost:8080.
