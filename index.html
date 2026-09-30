@@ -3,85 +3,105 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Атласы невидимого — серия научных атласов</title>
-  <meta name="description" content="Серия интерактивных научных атласов о невидимых вещах, которые управляют нами. Каждый том — в своей эпохе печати.">
-  <meta name="theme-color" content="#1c120b">
+  <title>Атласы невидимого — пять томов о том, что управляет тобой</title>
+  <meta name="description" content="Вирус, грибница, сон, восприятие, слизевик. Пять интерактивных научных атласов о невидимых вещах, которые управляют нами. Каждый — в своей эпохе печати.">
+  <meta name="theme-color" content="#0d0c0b">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=PT+Mono&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=3">
+  <link href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=Oswald:wght@500;700&family=PT+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=6">
   <script type="importmap">
     { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.min.js" } }
   </script>
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%231c120b'/%3E%3Crect x='7' y='5' width='5' height='22' fill='%237a1d1d'/%3E%3Crect x='13' y='8' width='4' height='19' fill='%232f4a3a'/%3E%3Crect x='18' y='6' width='5' height='21' fill='%23e9dfc8'/%3E%3C/svg%3E">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230d0c0b'/%3E%3Crect x='7' y='5' width='5' height='22' fill='%23e3261c'/%3E%3Crect x='13' y='8' width='4' height='19' fill='%23efe8d8'/%3E%3Crect x='18' y='6' width='5' height='21' fill='%23efe8d8'/%3E%3C/svg%3E">
 </head>
 <body>
   <a class="skip" href="#volumes">К томам</a>
 
   <div class="page" id="page">
-    <header class="masthead">
-      <div class="masthead-top mono">
-        <span>Библиотека научно-популярных изданий</span>
-        <span>Фонд: открытый доступ</span>
+    <header class="hero">
+      <div class="hero-bar mono">
+        <span>Спецхран · фонд невидимого</span>
+        <span class="hero-bar-mid">Шифр серии АН · 50/5</span>
+        <span>Доступ: <b>открыт</b></span>
       </div>
-      <p class="series-label mono">Серия · 5 томов · том за томом</p>
-      <h1 class="series-title">Атласы<br><span>невидимого</span></h1>
-      <p class="manifesto">
-        Вирус, грибница, сон, восприятие, слизевик&nbsp;— невидимые вещи, которые управляют нами.
-        Каждую мы рассматриваем в&nbsp;её собственной эпохе печати: от&nbsp;самиздатовской ксерокопии
-        до&nbsp;затёртой видеокассеты.
-      </p>
-      <dl class="masthead-meta mono">
-        <div><dt>Шифр серии</dt><dd>АН · 50/5</dd></div>
-        <div><dt>Язык</dt><dd>русский</dd></div>
-        <div><dt>Формат</dt><dd>интерактивный атлас</dd></div>
-      </dl>
+
+      <p class="hero-warn mono"><b aria-hidden="true">!</b> Внимание: содержит невидимое. Действует на&nbsp;тебя прямо сейчас.</p>
+
+      <p class="hero-kicker mono">Атласы</p>
+      <h1 class="hero-title">
+        <span class="hero-stage" id="heroStage">
+          <span class="hero-word" id="heroWord">Невидимое</span>
+          <canvas class="hero-canvas" id="heroCanvas" aria-hidden="true"></canvas>
+        </span>
+        <span class="hero-line">управляет <em>тобой.</em></span>
+      </h1>
+
+      <div class="hero-under">
+        <div class="eras">
+          <p class="mono eras-label">Эпоха печати: <span id="heroEra">—</span></p>
+          <div class="eras-btns" id="eras" role="group" aria-label="Выбрать эпоху печати для заголовка"></div>
+        </div>
+        <span class="hero-stamp mono" aria-hidden="true">Выдано<small>5 из 5 томов</small></span>
+      </div>
     </header>
+
+    <div class="ticker-wrap">
+      <div class="ticker" aria-label="Факты из томов">
+        <div class="ticker-track mono" id="tickerTrack"></div>
+      </div>
+    </div>
+
+    <section class="manifesto" aria-label="Манифест серии">
+      <p class="manifesto-lead">
+        Вирус пишет себя в&nbsp;твою ДНК. Грибница связывает корни леса. Во&nbsp;сне мозг перебирает память.
+        Глаз дорисовывает то, чего нет. Слизевик без единого нейрона находит кратчайший путь.
+      </p>
+      <p class="manifesto-punch">Ты этого не&nbsp;видишь. <span>Поэтому оно и&nbsp;работает.</span></p>
+      <p class="manifesto-note mono">Пять интерактивных атласов. Каждый свёрстан в&nbsp;своей эпохе печати — от&nbsp;самиздата до&nbsp;затёртой видеокассеты.</p>
+    </section>
 
     <main>
       <section class="volumes" id="volumes" aria-labelledby="volumes-h">
         <div class="section-head">
-          <h2 id="volumes-h"><span class="mono sec-no">§ 1</span> Полка томов</h2>
-          <p class="hint mono" id="hint">Наведите на корешок, чтобы заглянуть в том. Клик&nbsp;— открыть.</p>
+          <h2 id="volumes-h"><span class="sec-no mono">§ 1</span>Полка</h2>
+          <p class="hint mono" id="hint">Наведи на том — и&nbsp;страница на&nbsp;секунду станет им. Клик — открыть.</p>
         </div>
 
         <div class="shelf-3d" id="shelf3d" aria-hidden="true">
           <div class="shelf-tip mono" id="shelfTip" hidden></div>
         </div>
 
-        <div class="drawer">
-          <div class="drawer-plate mono"><span>Каталожный ящик</span><span>А–Я</span></div>
-          <ol class="catalog" id="catalog"></ol>
-          <noscript>
-            <ol class="catalog">
-              <li class="card"><div class="card-body"><p class="mono">Т. I · 616.98</p><h3>HAEMA — Кровь и вирусы</h3><a href="https://dmitrylelee.github.io/hiv/">Открыть том</a></div></li>
-              <li class="card"><div class="card-body"><p class="mono">Т. II · 582.28</p><h3>MYCELIUM — Подземная сеть</h3><a href="https://dmitrylelee.github.io/MYCELIUM/">Открыть том</a></div></li>
-              <li class="card"><div class="card-body"><p class="mono">Т. III · 612.821.7</p><h3>Ночная смена — Сон и мозг</h3><a href="https://dmitrylelee.github.io/night_dev/">Открыть том</a></div></li>
-              <li class="card"><div class="card-body"><p class="mono">Т. IV · 159.937</p><h3>Кабинет восприятия</h3><p>В печати</p></div></li>
-              <li class="card"><div class="card-body"><p class="mono">Т. V · 582.24</p><h3>BLOB — Слизевик</h3><a href="https://dmitrylelee.github.io/blob/">Открыть том</a></div></li>
-            </ol>
-          </noscript>
-        </div>
+        <ol class="catalog" id="catalog"></ol>
+        <noscript>
+          <ol class="catalog">
+            <li class="row"><div class="row-main"><h3 class="row-title">I · HAEMA — Кровь и вирусы</h3><a href="https://dmitrylelee.github.io/hiv/">Открыть том</a></div></li>
+            <li class="row"><div class="row-main"><h3 class="row-title">II · MYCELIUM — Подземная сеть</h3><a href="https://dmitrylelee.github.io/MYCELIUM/">Открыть том</a></div></li>
+            <li class="row"><div class="row-main"><h3 class="row-title">III · Ночная смена — Сон и мозг</h3><a href="https://dmitrylelee.github.io/night_dev/">Открыть том</a></div></li>
+            <li class="row"><div class="row-main"><h3 class="row-title">IV · Кабинет восприятия — Психология</h3><a href="https://dmitrylelee.github.io/psycho/">Открыть том</a></div></li>
+            <li class="row"><div class="row-main"><h3 class="row-title">V · BLOB — Слизевик</h3><a href="https://dmitrylelee.github.io/blob/">Открыть том</a></div></li>
+          </ol>
+        </noscript>
       </section>
 
       <section class="howto" aria-labelledby="howto-h">
         <div class="section-head">
-          <h2 id="howto-h"><span class="mono sec-no">§ 2</span> Как сделан каждый том</h2>
+          <h2 id="howto-h"><span class="sec-no mono">§ 2</span>Как сделан каждый том</h2>
         </div>
         <ol class="howto-list" id="howto"></ol>
       </section>
     </main>
 
     <footer class="colophon" aria-labelledby="colophon-h">
-      <h2 id="colophon-h"><span class="mono sec-no">§ 3</span> Колофон</h2>
+      <h2 id="colophon-h"><span class="sec-no mono">§ 3</span>Колофон</h2>
       <div class="colophon-grid">
         <p><strong>Источники.</strong> В каждом томе есть список литературы: статьи, обзоры, учебники. Утверждение без источника в атлас не попадает.</p>
         <p><strong>Пометки.</strong> Факты отмечены на полях: <span class="mark mark-yes mono">доказано</span> — устойчивый научный консенсус, <span class="mark mark-no mono">спорно</span> — гипотезы и открытые вопросы.</p>
-        <p><strong>Жанр.</strong> Это научно-популярные издания: упрощения неизбежны, и мы стараемся честно о&nbsp;них говорить.</p>
+        <p><strong>Жанр.</strong> Это научно-популярные издания: упрощения неизбежны, и мы честно о&nbsp;них говорим.</p>
         <p><strong>Не медицинская консультация.</strong> Атласы не заменяют врача. С вопросами о своём здоровье обращайтесь к специалисту.</p>
       </div>
       <p class="imprint mono">
-        Набрано антиквой Old Standard и машинописью PT Mono. Каждый том свёрстан отдельно, в своей технике.
+        <span>Набрано Oswald, антиквой Old Standard и машинописью PT Mono. Каждый том свёрстан отдельно, в своей технике.</span>
         <span class="imprint-stamp">Отпечатано в сети · 2026</span>
       </p>
     </footer>
@@ -111,6 +131,6 @@
 
   <p class="sr-only" aria-live="polite" id="live"></p>
 
-  <script type="module" src="main.js?v=3"></script>
+  <script type="module" src="main.js?v=6"></script>
 </body>
 </html>

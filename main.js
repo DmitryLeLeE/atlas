@@ -14,8 +14,10 @@ const VOLUMES = [
     code: '616.98',
     title: 'HAEMA',
     subtitle: 'Кровь и вирусы',
+    hook: 'Около 8% твоей ДНК — следы древних вирусов.',
     topic: 'ВИЧ, иммунитет, эпидемия',
     style: 'самиздат, ASCII, рваные ксерокопии',
+    era: 'самиздат',
     kind: 'шейдер',
     tech: 'ASCII-шейдер: трёхмерный вирион переводится в машинописные символы прямо в браузере.',
     effect: 'ascii',
@@ -28,8 +30,10 @@ const VOLUMES = [
     code: '582.28',
     title: 'MYCELIUM',
     subtitle: 'Подземная сеть',
+    hook: 'Большинство растений на Земле живут в союзе с грибами.',
     topic: 'грибница, микориза, обмен веществами',
     style: 'ризограф, полевой определитель',
+    era: 'ризограф',
     kind: 'симуляция',
     tech: 'Симуляция роста гиф: тысячи агентов ищут пищу, след печатается в две краски со сдвигом.',
     effect: 'riso',
@@ -42,8 +46,10 @@ const VOLUMES = [
     code: '612.821.7',
     title: 'Ночная смена',
     subtitle: 'Сон и мозг',
+    hook: 'Треть жизни ты проводишь без сознания. Мозг — нет.',
     topic: 'фазы сна, память, циркадные ритмы',
     style: 'советский научпоп 1960-х',
+    era: 'растр 1960-х',
     kind: 'симуляция',
     tech: 'Живая гипнограмма: модель циклов сна за ночь, свёрстанная растром и красным кирпичом.',
     effect: 'raster',
@@ -56,13 +62,15 @@ const VOLUMES = [
     code: '159.937',
     title: 'Кабинет восприятия',
     subtitle: 'Психология',
+    hook: 'Часть того, что ты сейчас видишь, мозг дорисовал сам.',
     topic: 'восприятие, иллюзии, проекция',
     style: 'оп-арт, кляксы Роршаха',
+    era: 'оп-арт',
     kind: 'иллюзия',
     tech: 'Интерактивные иллюзии и генератор симметричных клякс: мозг проверяет сам себя.',
     effect: 'moire',
     spine: '#e2d9c3', spineInk: '#121212',
-    url: null,
+    url: 'https://dmitrylelee.github.io/psycho/',
   },
   {
     id: 'blob',
@@ -70,8 +78,10 @@ const VOLUMES = [
     code: '582.24',
     title: 'BLOB',
     subtitle: 'Слизевик',
+    hook: 'У него нет ни одного нейрона. Он повторил схему железных дорог Токио.',
     topic: 'физарум, поиск пути, интеллект без мозга',
     style: 'гранж 90-х, VHS',
+    era: 'VHS',
     kind: 'симуляция',
     tech: 'Модель Physarum на GPU: слизевик прокладывает сеть дорог поверх затёртой видеокассеты.',
     effect: 'vhs',
@@ -83,6 +93,7 @@ const VOLUMES = [
 const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
 const wide = matchMedia('(min-width: 760px)');
 const $ = (s, r = document) => r.querySelector(s);
+const byId = id => VOLUMES.find(v => v.id === id);
 
 /* ---------------- Каталог ---------------- */
 
@@ -90,7 +101,7 @@ function el(tag, attrs = {}, children = []) {
   const n = document.createElement(tag);
   for (const [k, v] of Object.entries(attrs)) {
     if (k === 'text') n.textContent = v;
-    else if (k === 'style') Object.assign(n.style, v);
+    else if (k === 'style') for (const [p, val] of Object.entries(v)) n.style.setProperty(p, val);
     else n.setAttribute(k, v);
   }
   for (const c of [].concat(children)) if (c) n.append(c);
@@ -109,57 +120,46 @@ function renderCatalog() {
     const openBtn = el('button', {
       class: 'btn', type: 'button', 'data-open': v.id,
       'aria-label': out ? `Открыть том ${v.num}: ${v.title}` : `Том ${v.num}: ${v.title} — в печати`,
-      text: out ? 'Открыть том →' : 'В печати',
+      text: out ? 'Открыть →' : 'В печати',
     });
     if (!out) openBtn.disabled = true;
 
-    const card = el('li', { class: 'card', 'data-id': v.id, style: { '--spine': v.spine, '--spine-ink': v.spineInk } }, [
-      el('div', { class: 'card-spine', 'aria-hidden': 'true' }, [
-        el('span', { class: 'cs-num', text: v.num }),
-        el('span', { class: 'cs-band' }),
-        el('span', { class: 'cs-title', text: v.title }),
-        el('span', { class: 'cs-band' }),
+    frag.append(el('li', { class: 'row', 'data-id': v.id, style: { '--spine': v.spine, '--spine-ink': v.spineInk } }, [
+      el('span', { class: 'row-num', 'aria-hidden': 'true', text: v.num }),
+      el('div', { class: 'row-main' }, [
+        el('p', { class: 'row-code mono', text: `Т. ${v.num} · ${v.code} · ${v.subtitle}` }),
+        el('h3', { class: 'row-title', text: v.title }),
+        el('p', { class: 'row-hook', text: v.hook }),
       ]),
-      el('div', { class: 'card-body' }, [
-        el('p', { class: 'card-code mono' }, [
-          el('span', { text: `Т. ${v.num} · ${v.code}` }),
-        ]),
-        el('h3', { class: 'card-title', text: v.title }),
-        el('p', { class: 'card-sub', text: v.subtitle }),
-        el('dl', { class: 'card-fields' }, [
-          field('Тема', v.topic),
-          field('Стиль', v.style),
-          field('Статус', out ? 'выдано, доступен' : 'в печати'),
-        ]),
-        el('div', { class: 'card-actions' }, [
-          openBtn,
-          el('button', { class: 'peek', type: 'button', 'data-peek': v.id, text: 'заглянуть' }),
-        ]),
+      el('dl', { class: 'row-meta mono' }, [
+        field('Тема', v.topic),
+        field('Печать', v.style),
+        field('Техника', v.kind),
+      ]),
+      el('div', { class: 'row-act' }, [
+        openBtn,
         el('span', { class: `stamp ${out ? 'stamp--out' : 'stamp--press'}`, 'aria-hidden': 'true' },
           out ? ['Выдано', el('small', { text: '2026' })] : ['В печати', el('small', { text: 'ждите' })]),
       ]),
-    ]);
-    frag.append(card);
+    ]));
   }
   list.append(frag);
 
-  const byId = id => VOLUMES.find(v => v.id === id);
-
   list.addEventListener('pointerover', e => {
     if (e.pointerType !== 'mouse') return;
-    const card = e.target.closest('.card');
-    if (!card || card.contains(e.relatedTarget)) return;
-    peek(byId(card.dataset.id));
+    const row = e.target.closest('.row');
+    if (!row || row.contains(e.relatedTarget)) return;
+    peek(byId(row.dataset.id));
   });
   list.addEventListener('focusin', e => {
-    const card = e.target.closest('.card');
-    if (card && !card.contains(e.relatedTarget)) peek(byId(card.dataset.id));
+    const row = e.target.closest('.row');
+    if (row && !row.contains(e.relatedTarget)) peek(byId(row.dataset.id));
   });
   list.addEventListener('click', e => {
     const open = e.target.closest('[data-open]');
     if (open && !open.disabled) return openVolume(byId(open.dataset.open));
-    const card = e.target.closest('.card');
-    if (card) peek(byId(card.dataset.id), true); // тап на телефоне — заглянуть
+    const row = e.target.closest('.row');
+    if (row) peek(byId(row.dataset.id), true); // тап на телефоне — заглянуть
   });
 }
 
@@ -167,11 +167,18 @@ function renderHowto() {
   const list = $('#howto');
   for (const v of VOLUMES) {
     list.append(el('li', {}, [
-      el('span', { class: 'h-code', text: `Т. ${v.num} · ${v.code}` }),
+      el('span', { class: 'h-code mono', text: `Т. ${v.num}` }),
       el('span', { class: 'h-name', text: v.title }),
-      el('span', { class: 'h-tech' }, [el('span', { class: 'h-kind', text: v.kind }), v.tech]),
+      el('span', { class: 'h-tech' }, [el('span', { class: 'h-kind mono', text: v.kind }), v.tech]),
     ]));
   }
+}
+
+function renderTicker() {
+  const facts = VOLUMES.map(v => v.hook.toUpperCase());
+  const line = facts.join('  ✶  ') + '  ✶  ';
+  const track = $('#tickerTrack');
+  track.append(el('span', { text: line }), el('span', { text: line, 'aria-hidden': 'true' }));
 }
 
 /* ============================================================
@@ -329,8 +336,9 @@ function peek(vol, force = false) {
   fx.current = vol.id; fx.last = now;
 
   clearTimeout(fx.hold); clearTimeout(fx.clear); cancelAnimationFrame(fx.raf);
-  document.querySelectorAll('.card.is-active').forEach(c => c.classList.remove('is-active'));
-  document.querySelector(`.card[data-id="${vol.id}"]`)?.classList.add('is-active');
+  document.querySelectorAll('.row.is-active').forEach(c => c.classList.remove('is-active'));
+  document.querySelector(`.row[data-id="${vol.id}"]`)?.classList.add('is-active');
+  if (hero.mask && !hero.pinned) heroSetStyle(HERO_ORDER.indexOf(vol.effect));
 
   sizeFx();
   document.body.dataset.fx = vol.effect;
@@ -355,7 +363,7 @@ function peek(vol, force = false) {
 
 function endPeek() {
   fx.root.classList.remove('on');
-  document.querySelectorAll('.card.is-active').forEach(c => c.classList.remove('is-active'));
+  document.querySelectorAll('.row.is-active').forEach(c => c.classList.remove('is-active'));
   fx.clear = setTimeout(() => {
     delete document.body.dataset.fx;
     cancelAnimationFrame(fx.raf);
@@ -684,15 +692,304 @@ function spineTexture(THREE, v, w, h) {
   return tex;
 }
 
+/* ============================================================
+   Герой: слово «НЕВИДИМОЕ», которое печатается по очереди
+   в технике каждого тома. Под курсором — чистый оттиск.
+   ============================================================ */
+
+const hero = {
+  canvas: null, ctx: null, text: null,
+  w: 0, h: 0, dpr: 1, fs: 0,
+  mask: null, maskData: null, tints: {}, buf: null,
+  idx: 0, since: 0, raf: 0, visible: true, pinned: false,
+  px: -1e4, py: -1e4,
+};
+
+const HERO_COLORS = { cream: '#efe8d8', red: '#e3261c', pink: '#ff48b0', blue: '#0078bf', cyan: '#00e1ff', brick: '#d2452c' };
+
+function tinted(color) {
+  const c = document.createElement('canvas');
+  c.width = hero.mask.width; c.height = hero.mask.height;
+  const g = c.getContext('2d');
+  g.fillStyle = color; g.fillRect(0, 0, c.width, c.height);
+  g.globalCompositeOperation = 'destination-in';
+  g.drawImage(hero.mask, 0, 0);
+  return c;
+}
+
+function sizeHero() {
+  const { canvas, text } = hero;
+  // подгоняем кегль так, чтобы слово легло ровно на ширину колонки
+  const avail = text.parentElement.clientWidth;
+  const probe = document.createElement('canvas').getContext('2d');
+  const fam = getComputedStyle(text).fontFamily;
+  probe.font = `700 100px ${fam}`;
+  const w100 = probe.measureText(text.textContent.trim().toUpperCase()).width;
+  if (w100 && avail) text.style.fontSize = Math.min(avail * 100 / w100, 460).toFixed(2) + 'px';
+  const box = text.getBoundingClientRect();
+  if (!box.width) return;
+  hero.dpr = Math.min(devicePixelRatio || 1, 1.5);
+  const fsNow = parseFloat(getComputedStyle(text).fontSize);
+  // поля вокруг слова: под сдвиг красок, срыв строк и выносные элементы
+  const padX = Math.round(fsNow * 0.12), padY = Math.round(fsNow * 0.2);
+  hero.padX = padX; hero.padY = padY;
+  hero.w = Math.round(box.width) + padX * 2;
+  hero.h = Math.round(box.height) + padY * 2;
+  canvas.width = Math.round(hero.w * hero.dpr);
+  canvas.height = Math.round(hero.h * hero.dpr);
+  canvas.style.width = hero.w + 'px';
+  canvas.style.height = hero.h + 'px';
+  canvas.style.left = -padX + 'px';
+  canvas.style.top = -padY + 'px';
+
+  const cs = getComputedStyle(text);
+  hero.fs = parseFloat(cs.fontSize);
+  const m = document.createElement('canvas');
+  m.width = canvas.width; m.height = canvas.height;
+  const g = m.getContext('2d');
+  g.scale(hero.dpr, hero.dpr);
+  g.fillStyle = '#fff';
+  g.font = `${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`;
+  g.textBaseline = 'alphabetic';
+  // выравниваем по реальной ширине строки
+  const word = text.textContent.trim().toUpperCase();
+  const mw = g.measureText(word);
+  const asc = mw.actualBoundingBoxAscent, desc = mw.actualBoundingBoxDescent;
+  const y = padY + (box.height + asc - desc) / 2;
+  g.fillText(word, padX + (box.width - mw.width) / 2, y);
+  hero.mask = m;
+  // пиксели читаем с отдельной копии, чтобы сама маска осталась на GPU
+  const probeC = document.createElement('canvas');
+  probeC.width = m.width; probeC.height = m.height;
+  const pg = probeC.getContext('2d', { willReadFrequently: true });
+  pg.drawImage(m, 0, 0);
+  hero.maskData = pg.getImageData(0, 0, m.width, m.height).data;
+  hero.tints = {};
+  for (const [k, c] of Object.entries(HERO_COLORS)) hero.tints[k] = tinted(c);
+  hero.buf = document.createElement('canvas');
+  hero.buf.width = m.width; hero.buf.height = m.height;
+  heroDraw(performance.now());
+}
+
+function inMask(x, y) {
+  const d = hero.dpr;
+  const i = ((Math.floor(y * d) * hero.mask.width) + Math.floor(x * d)) * 4 + 3;
+  return hero.maskData[i] > 110;
+}
+
+const HERO_FX = {
+  ascii(g, w, h, t) {
+    const cw = Math.max(5, hero.fs / 30), ch = cw * 1.6;
+    const ramp = '.:-=+*#%@';
+    g.font = `${Math.round(ch * 0.95)}px "PT Mono", monospace`;
+    g.textBaseline = 'top';
+    const k = t * 0.002, tick = Math.floor(t / 90);
+    // бледный силуэт слова: читается даже при крупной «печатной» ячейке
+    g.globalAlpha = 0.16;
+    g.drawImage(hero.tints.cream, 0, 0, w, h);
+    g.globalAlpha = 1;
+    for (let y = 0; y < h; y += ch) {
+      for (let x = 0; x < w; x += cw) {
+        const inside = inMask(x + cw / 2, y + ch / 2);
+        if (!inside) {
+          if (hash(x, y + tick) > 0.985) { g.fillStyle = 'rgba(239,232,216,.25)'; g.fillText(ramp[Math.floor(x + y) % 4], x, y); }
+          continue;
+        }
+        const n = (Math.sin(x * 0.02 + k) + Math.sin(y * 0.05 - k * 1.4)) * 0.25 + 0.5;
+        const v = Math.min(0.999, n * 0.6 + hash(x, y + tick) * 0.4);
+        g.fillStyle = v > 0.8 ? HERO_COLORS.red : HERO_COLORS.cream;
+        g.fillText(ramp[Math.floor(v * ramp.length)], x, y);
+      }
+    }
+    // полоса «ксерокса»
+    const sy = (t * 0.12) % h;
+    g.fillStyle = 'rgba(239,232,216,.12)';
+    g.fillRect(0, sy, w, 3);
+  },
+
+  riso(g, w, h, t) {
+    const o = Math.max(3, hero.fs * 0.03);
+    const dx = Math.sin(t * 0.003) * o, dy = Math.cos(t * 0.0023) * o * 0.6;
+    g.globalCompositeOperation = 'lighter';
+    g.globalAlpha = 0.92;
+    g.drawImage(hero.tints.pink, -o + dx, dy, w, h);
+    g.drawImage(hero.tints.blue, o - dx, -dy, w, h);
+    g.globalAlpha = 1;
+    g.globalCompositeOperation = 'source-over';
+    // зерно ризографа
+    const seed = Math.floor(t / 70);
+    for (let i = 0; i < 1400; i++) {
+      const x = hash(i, seed) * w, y = hash(seed, i * 1.3) * h;
+      g.fillStyle = i & 1 ? 'rgba(255,72,176,.5)' : 'rgba(0,120,191,.5)';
+      g.fillRect(x, y, 1.5, 1.5);
+    }
+  },
+
+  raster(g, w, h, t) {
+    const s = Math.max(5, hero.fs / 18);
+    const k = t * 0.0022;
+    g.fillStyle = HERO_COLORS.brick;
+    g.beginPath();
+    for (let y = 0, row = 0; y < h + s; y += s, row++) {
+      for (let x = row % 2 ? s / 2 : 0; x < w + s; x += s) {
+        const inside = inMask(Math.min(w - 1, x), Math.min(h - 1, y));
+        const tone = inside
+          ? 0.55 + 0.45 * Math.sin(x * 0.012 - k + y * 0.01)
+          : 0.12 * (0.5 + 0.5 * Math.sin(x * 0.01 + k));
+        const r = Math.max(0, tone) * s * 0.62;
+        if (r < 0.5) continue;
+        g.moveTo(x + r, y); g.arc(x, y, r, 0, Math.PI * 2);
+      }
+    }
+    g.fill();
+  },
+
+  moire(g, w, h, t) {
+    const b = hero.buf.getContext('2d');
+    b.setTransform(hero.dpr, 0, 0, hero.dpr, 0, 0);
+    b.globalCompositeOperation = 'source-over';
+    b.clearRect(0, 0, w, h);
+    b.strokeStyle = HERO_COLORS.cream;
+    b.lineWidth = Math.max(1.4, hero.fs / 110);
+    // две решётки линий под почти одинаковым углом — полосы муара «плывут»
+    const k = t * 0.0009, step = Math.max(5, hero.fs / 28), L = h * 1.6, X = w * 0.62;
+    const grids = [0.18 * Math.sin(k), 0.18 * Math.sin(k) + 0.07 + 0.05 * Math.sin(k * 1.7)];
+    for (const ang of grids) {
+      b.save();
+      b.translate(w / 2, h / 2);
+      b.rotate(ang);
+      b.beginPath();
+      for (let x = -X; x < X; x += step) { b.moveTo(x, -L / 2); b.lineTo(x, L / 2); }
+      b.stroke();
+      b.restore();
+    }
+    b.setTransform(1, 0, 0, 1, 0, 0);
+    b.globalCompositeOperation = 'destination-in';
+    b.drawImage(hero.mask, 0, 0);
+    g.globalAlpha = 0.14;
+    g.drawImage(hero.tints.cream, 0, 0, w, h);
+    g.globalAlpha = 1;
+    g.drawImage(hero.buf, 0, 0, w, h);
+  },
+
+  vhs(g, w, h, t) {
+    const o = Math.max(2, hero.fs * 0.025) * (1 + Math.sin(t * 0.02) * 0.4);
+    g.globalCompositeOperation = 'lighter';
+    g.drawImage(hero.tints.red, o, 0, w, h);
+    g.drawImage(hero.tints.cyan, -o, 0, w, h);
+    g.globalCompositeOperation = 'source-over';
+    g.globalAlpha = 0.85;
+    g.drawImage(hero.tints.cream, 0, 0, w, h);
+    g.globalAlpha = 1;
+    // срыв строк
+    const seed = Math.floor(t / 110);
+    const d = hero.dpr;
+    for (let i = 0; i < 4; i++) {
+      const y = hash(i, seed) * h, bh = 4 + hash(seed, i) * hero.fs * 0.12, sh = (hash(i + 3, seed) - 0.5) * hero.fs * 0.35;
+      g.drawImage(g.canvas, 0, y * d, w * d, bh * d, sh, y, w, bh);
+    }
+    g.fillStyle = 'rgba(0,0,0,.35)';
+    for (let y = 0; y < h; y += 3) g.fillRect(0, y, w, 1);
+  },
+};
+
+const HERO_ORDER = ['ascii', 'riso', 'raster', 'moire', 'vhs'];
+const HERO_SLOT = 2600;
+
+function heroDraw(now) {
+  const { ctx: g, w, h } = hero;
+  if (!hero.mask) return;
+  g.setTransform(hero.dpr, 0, 0, hero.dpr, 0, 0);
+  g.globalCompositeOperation = 'source-over';
+  g.clearRect(0, 0, w, h);
+  const effect = HERO_ORDER[hero.idx];
+  HERO_FX[effect](g, w, h, reduceMotion.matches ? 1200 : now);
+  // лупа: под курсором — чистый оттиск
+  if (hero.px > -1e3) {
+    const r = Math.max(48, hero.fs * 0.4);
+    g.save();
+    g.beginPath(); g.arc(hero.px, hero.py, r, 0, Math.PI * 2); g.clip();
+    g.fillStyle = '#0d0c0b'; g.fillRect(hero.px - r, hero.py - r, r * 2, r * 2);
+    g.drawImage(hero.tints.cream, 0, 0, w, h);
+    g.restore();
+    g.strokeStyle = HERO_COLORS.red; g.lineWidth = 2;
+    g.beginPath(); g.arc(hero.px, hero.py, r, 0, Math.PI * 2); g.stroke();
+  }
+}
+
+function heroSetStyle(i, pin = false) {
+  hero.idx = (i + HERO_ORDER.length) % HERO_ORDER.length;
+  hero.since = performance.now();
+  if (pin) hero.pinned = true;
+  const v = VOLUMES.find(x => x.effect === HERO_ORDER[hero.idx]);
+  $('#heroEra').textContent = `Т. ${v.num} · ${v.title} · ${v.era}`;
+  document.querySelectorAll('.era-btn').forEach((b, j) => b.setAttribute('aria-pressed', String(j === hero.idx)));
+  if (reduceMotion.matches) heroDraw(0);
+}
+
+// кадр раз в ~40 мс: живо, но не жжёт батарею; пока страница «перекрашена»
+// или открывается книга, заголовок замирает
+let heroLast = 0;
+function heroLoop(now) {
+  hero.raf = 0;
+  if (!hero.visible) return;
+  const busy = opening || fx.root.classList.contains('on');
+  if (!busy) {
+    if (!hero.pinned && now - hero.since > HERO_SLOT) heroSetStyle(hero.idx + 1);
+    if (now - heroLast > 40) { heroLast = now; heroDraw(now); }
+  } else hero.since += 16;
+  hero.raf = requestAnimationFrame(heroLoop);
+}
+
+function heroStart() {
+  if (reduceMotion.matches) { heroDraw(0); return; }
+  if (!hero.raf) hero.raf = requestAnimationFrame(heroLoop);
+}
+
+async function initHero() {
+  hero.canvas = $('#heroCanvas');
+  hero.text = $('#heroWord');
+  hero.ctx = hero.canvas.getContext('2d');
+  if (!hero.ctx) return;
+  try { await document.fonts.load('700 100px Oswald'); await document.fonts.ready; } catch {}
+  document.documentElement.classList.add('has-hero');
+  sizeHero();
+
+  const eras = $('#eras');
+  VOLUMES.forEach((v, i) => {
+    const b = el('button', { class: 'era-btn mono', type: 'button', 'aria-pressed': 'false', title: `${v.title}: ${v.era}`, text: v.num });
+    b.addEventListener('click', () => { heroSetStyle(i, true); heroStart(); });
+    eras.append(b);
+  });
+  heroSetStyle(0);
+
+  const stage = $('#heroStage');
+  stage.addEventListener('pointermove', e => {
+    if (e.pointerType !== 'mouse') return;
+    const r = hero.canvas.getBoundingClientRect();
+    hero.px = e.clientX - r.left; hero.py = e.clientY - r.top;
+    if (reduceMotion.matches) heroDraw(0);
+  });
+  stage.addEventListener('pointerleave', () => { hero.px = hero.py = -1e4; if (reduceMotion.matches) heroDraw(0); });
+
+  new IntersectionObserver(([e]) => { hero.visible = e.isIntersecting; if (hero.visible) heroStart(); }).observe(stage);
+  let rt;
+  new ResizeObserver(() => { clearTimeout(rt); rt = setTimeout(sizeHero, 80); }).observe(stage);
+  reduceMotion.addEventListener('change', heroStart);
+  heroStart();
+}
+
 /* ---------------- Старт ---------------- */
 
 renderCatalog();
 renderHowto();
+renderTicker();
+initHero();
 addEventListener('resize', () => { if (fx.root.classList.contains('on')) sizeFx(); });
 
 const hint = $('#hint');
 if (!matchMedia('(hover: hover)').matches) {
-  hint.textContent = 'Коснитесь карточки, чтобы заглянуть в том. Кнопка — открыть.';
+  hint.textContent = 'Коснитесь строки, чтобы заглянуть в том. Кнопка — открыть.';
 }
 
 if (wide.matches) initShelf();
