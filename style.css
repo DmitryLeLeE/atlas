@@ -622,6 +622,36 @@ a { color: inherit; }
 .sheet--blob .s-col { margin-top: 4cqw; padding: 2.5cqw 3cqw; max-width: 80cqw; border-left: 1cqw solid #d9b23a; background: rgba(22,20,12,.9); font-size: 2.9cqw; line-height: 1.55; color: #efe6c6; }
 .sheet--blob .s-marker { margin-top: 3cqw; font-family: var(--hand); font-weight: 700; font-size: 5.5cqw; color: #d9b23a; transform: rotate(-4deg); transform-origin: left; }
 
+/* VII · Жгучий атлас — рыночная этикетка и поп-графика */
+.sheet--pepper { background: #f3ecdf; color: #1b1712; font-family: "Golos Text", system-ui, sans-serif; }
+.sheet--pepper > .s-in { padding: 0 6cqw 5cqw; }
+.sheet--pepper .s-mast {
+  display: flex; align-items: baseline; gap: 2.4cqw; flex-wrap: wrap;
+  margin: 0 -6cqw; padding: 2.6cqw 6cqw; border-bottom: 2px solid #1b1712;
+  font-family: var(--mono); font-size: 2.3cqw; text-transform: uppercase; letter-spacing: .08em; color: #4a4238;
+}
+.sheet--pepper .s-mast b { font-family: "Unbounded", sans-serif; font-weight: 900; font-size: 3.2cqw; letter-spacing: .02em; color: #1b1712; }
+.sheet--pepper .s-kicker { margin-top: 7cqw; font-family: "JetBrains Mono", var(--mono); font-weight: 700; font-size: 2.5cqw; text-transform: uppercase; letter-spacing: .08em; color: #b3120f; }
+.sheet--pepper .s-title { margin-top: 1.4cqw; font-family: "Unbounded", sans-serif; font-weight: 900; font-size: 17cqw; line-height: .95; letter-spacing: -.04em; white-space: nowrap; }
+.sheet--pepper .mis { position: relative; display: inline-block; isolation: isolate; }
+.sheet--pepper .mis::before, .sheet--pepper .mis::after { content: attr(data-t); position: absolute; left: 0; top: 0; z-index: -1; mix-blend-mode: multiply; }
+.sheet--pepper .mis::before { color: #ff4fa3; transform: translate(-.045em, .03em); }
+.sheet--pepper .mis::after { color: #ffc21a; transform: translate(.05em, -.025em); }
+.sheet--pepper .dot { color: #e0231f; }
+.sheet--pepper .s-lede { margin-top: 3cqw; max-width: 54cqw; font-size: 2.9cqw; line-height: 1.45; }
+.sheet--pepper .s-lede em { font-style: normal; background: linear-gradient(transparent 62%, #ffc21a 62%); }
+.sheet--pepper .s-warn {
+  position: absolute; right: 5cqw; bottom: 5cqw; width: 40cqw;
+  padding: 2cqw 2.6cqw;
+  background: #ffc21a; border: 2px solid #1b1712; box-shadow: 1.2cqw 1.2cqw 0 #ff4fa3;
+  transform: rotate(2deg);
+  font-family: "JetBrains Mono", var(--mono); font-size: 2.1cqw;
+}
+.sheet--pepper .s-warn p { display: flex; justify-content: space-between; gap: 1cqw; padding: .4cqw 0; }
+.sheet--pepper .s-warn b { white-space: nowrap; }
+.sheet--pepper .s-warn .w-head { justify-content: flex-start; align-items: center; gap: 1.6cqw; margin-bottom: 1cqw; padding-bottom: 1.2cqw; border-bottom: 2px solid #1b1712; font-family: "Unbounded", sans-serif; font-weight: 900; font-size: 3.2cqw; text-transform: uppercase; }
+.sheet--pepper .s-warn .w-head i { font-style: normal; display: grid; place-items: center; width: 5cqw; height: 4.4cqw; background: #1b1712; color: #ffc21a; clip-path: polygon(50% 0, 100% 100%, 0 100%); font-size: 2.6cqw; font-weight: 900; padding-top: 1.2cqw; }
+
 /* лист, вынутый из папки, разворачивается на экран */
 .sheet--launch {
   position: fixed; z-index: 60; margin: 0; inset: auto;
@@ -736,6 +766,10 @@ body[data-fx="moire"] .fx canvas { mix-blend-mode: difference; }
 /* V · Кабинет восприятия: испытуемый — клякса */
 body[data-fx="blot"] .page { filter: grayscale(1) contrast(1.15); }
 body[data-fx="blot"] .fx canvas { mix-blend-mode: multiply; }
+
+/* VII · Жгучий атлас — жар */
+body[data-fx="heat"] .page { filter: saturate(1.6) contrast(1.05) sepia(.25) hue-rotate(-12deg); }
+body[data-fx="heat"] .fx canvas { mix-blend-mode: multiply; }
 
 /* VI · BLOB — VHS-дрожь */
 body[data-fx="vhs"] .page {

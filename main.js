@@ -110,6 +110,23 @@ const VOLUMES = [
     spine: '#b8961e', spineInk: '#1a1405',
     url: 'https://dmitrylelee.github.io/blob/',
   },
+  {
+    id: 'pepper',
+    num: 'VII',
+    code: '612.87',
+    title: 'Жгучий атлас',
+    subtitle: 'Как перец обманывает мозг',
+    hook: 'Перец не нагревает рот ни на градус. Мозг всё равно уверен, что ты горишь.',
+    topic: 'капсаицин, рецептор TRPV1, боль и удовольствие',
+    style: 'рыночная этикетка, поп-графика',
+    era: 'этикетка',
+    note: 'осторожно: жжётся',
+    kind: 'шкала',
+    tech: 'Шкала Сковилла вдоль всей страницы: чем глубже читаешь, тем злее перец; сам перец крутится мышью.',
+    effect: 'heat',
+    spine: '#e0231f', spineInk: '#fbf6ec',
+    url: 'https://dmitrylelee.github.io/smth/',
+  },
 ];
 
 const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
@@ -198,9 +215,19 @@ const SHEETS = {
     <p class="s-sub"><span class="a">разум</span> <span class="b">без</span> <span class="c">мозга</span></p>
     <p class="s-col">Жёлтая плёнка на гнилом бревне умеет находить кратчайший путь в&nbsp;лабиринте. У&nbsp;неё нет ни мозга, ни нейронов — это вообще одна клетка.</p>
     <p class="s-marker">курсор = хлопья овса →</p>`,
+  pepper: () => `
+    <div class="s-mast"><b>Жгучий атлас</b><span>выпуск № 8 · последний · острый</span></div>
+    <p class="s-kicker">Атлас о боли, которую мы добровольно едим</p>
+    <p class="s-title"><span class="mis" data-t="ОСТРО">ОСТРО</span><span class="dot">.</span></p>
+    <p class="s-lede">Острота — не вкус. Перец не нагревает рот ни на градус: он взламывает датчик, который отвечает за <em>ожог</em>.</p>
+    <div class="s-warn">
+      <p class="w-head"><i>!</i> Осторожно</p>
+      <p><span>капсаицин</span><b>16 000 000 SHU</b></p>
+      <p><span>мишень</span><b>TRPV1</b></p>
+    </div>`,
 };
 
-const TILTS = [-1.2, 0.9, -0.5, 1.3, -0.9, 0.6];
+const TILTS = [-1.2, 0.9, -0.5, 1.3, -0.9, 0.6, -0.7];
 const CHECKOUT = ['03.02', '17.05', '30.09'];
 
 function renderFolders() {
@@ -553,6 +580,28 @@ const EFFECTS = {
     c.beginPath(); c.moveTo(w / 2, 0); c.lineTo(w / 2, h); c.stroke(); c.setLineDash([]);
   },
 
+  // VII · жар: снизу поднимается пламя, в воздухе искры
+  heat(c, w, h, t) {
+    c.clearRect(0, 0, w, h);
+    const rise = Math.min(1, 0.3 + t / 700);
+    const gr = c.createLinearGradient(0, h, 0, h * (1 - 0.75 * rise));
+    gr.addColorStop(0, 'rgba(224,35,31,.85)'); gr.addColorStop(0.45, 'rgba(255,194,26,.55)'); gr.addColorStop(1, 'rgba(255,79,163,0)');
+    c.fillStyle = gr;
+    c.beginPath(); c.moveTo(0, h);
+    for (let x = 0; x <= w; x += 24) {
+      const y = h * (1 - 0.55 * rise) + Math.sin(x * 0.012 + t * 0.008) * 40 + Math.sin(x * 0.031 - t * 0.011) * 24;
+      c.lineTo(x, y);
+    }
+    c.lineTo(w, h); c.closePath(); c.fill();
+    const seed = Math.floor(t / 60);
+    for (let i = 0; i < 90; i++) {
+      const x = hash(i, 3) * w + Math.sin(t * 0.004 + i) * 20;
+      const y = h - ((hash(3, i) * h + t * (0.25 + hash(i, 4) * 0.5)) % h);
+      c.fillStyle = hash(i, seed) > 0.5 ? 'rgba(255,194,26,.9)' : 'rgba(224,35,31,.9)';
+      c.fillRect(x, y, 3, 3);
+    }
+  },
+
   // VI · VHS: развёртка, полоса трекинга, экранное меню
   vhs(c, w, h, t) {
     c.clearRect(0, 0, w, h);
@@ -670,7 +719,7 @@ addEventListener('pageshow', () => {
 
 const INK = {
   ink: '#1b1916', paper: '#efe7d6', red: '#d42a1e', pink: '#ff48b0',
-  blue: '#0078bf', cyan: '#00a9c9', brick: '#c2402a',
+  blue: '#0078bf', cyan: '#00a9c9', brick: '#c2402a', yellow: '#ffc21a',
 };
 const PLATE_FONT = '"Oswald", "Arial Narrow", Impact, sans-serif';
 
@@ -855,6 +904,21 @@ const PLATE_FX = {
     // ось симметрии — как сгиб листа
     g.strokeStyle = 'rgba(212,42,30,.55)'; g.lineWidth = 1; g.setLineDash([4, 5]);
     g.beginPath(); g.moveTo(w / 2, 0); g.lineTo(w / 2, h); g.stroke(); g.setLineDash([]);
+  },
+
+  // VII · жар: розовая и жёлтая краски мимо приводки, воздух дрожит
+  heat(p, g, w, h, t) {
+    const o = Math.max(2, p.fs * 0.045), d = p.dpr;
+    g.globalCompositeOperation = 'multiply';
+    g.drawImage(p.tints.pink, -o, o * 0.6, w, h);
+    g.drawImage(p.tints.yellow, o, -o * 0.5, w, h);
+    g.globalCompositeOperation = 'source-over';
+    // основной оттиск режется на полосы, которые плывут, как воздух над жаровней
+    const band = Math.max(3, p.fs / 22);
+    for (let y = 0; y < h; y += band) {
+      const sh = Math.sin(y * 0.06 + t * 0.006) * p.fs * 0.02;
+      g.drawImage(p.tints.ink, 0, y * d, w * d, band * d, sh, y, w, band);
+    }
   },
 
   // VI · стоп-кадр с кассеты, переснятый на ксерокс
