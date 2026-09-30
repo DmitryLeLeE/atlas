@@ -1,0 +1,509 @@
+/* ============================================================
+   Атласы невидимого — обложка серии
+   Нейтральная рамка: каталог старой библиотеки.
+   ============================================================ */
+
+:root {
+  --wood-0: #140c07;
+  --wood-1: #1c120b;
+  --wood-2: #2a1a0f;
+  --wood-3: #3b2515;
+  --brass: #b8964f;
+  --brass-dim: #7d6535;
+  --paper: #efe6d1;
+  --paper-2: #e4d8bd;
+  --paper-rule: rgba(60, 110, 160, 0.22);
+  --paper-margin: rgba(170, 40, 30, 0.35);
+  --ink: #1f1a14;
+  --ink-soft: #5a4e3f;
+  --cream: #e9dfc8;
+  --cream-dim: #b9ab8e;
+  --stamp: #a3281f;
+  --stamp-blue: #2f4f7a;
+
+  --serif: "Old Standard TT", "PT Serif", Georgia, "Times New Roman", serif;
+  --text: "PT Serif", Georgia, "Times New Roman", serif;
+  --mono: "PT Mono", "Courier New", ui-monospace, monospace;
+
+  --gutter: clamp(16px, 4vw, 48px);
+  --maxw: 1180px;
+}
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  color: var(--cream);
+  font-family: var(--text);
+  font-size: 17px;
+  line-height: 1.55;
+  background-color: var(--wood-1);
+  background-image:
+    radial-gradient(ellipse at 50% -10%, rgba(255, 190, 120, 0.10), transparent 60%),
+    repeating-linear-gradient(92deg, rgba(0,0,0,0.00) 0 7px, rgba(0,0,0,0.10) 7px 9px, rgba(255,255,255,0.015) 9px 15px),
+    repeating-linear-gradient(88deg, rgba(0,0,0,0.00) 0 31px, rgba(0,0,0,0.18) 31px 33px),
+    linear-gradient(180deg, var(--wood-2), var(--wood-1) 40%, var(--wood-0));
+  background-attachment: fixed;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+.mono { font-family: var(--mono); letter-spacing: 0.02em; }
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+.skip {
+  position: absolute; left: 16px; top: -60px; z-index: 50;
+  background: var(--paper); color: var(--ink); padding: 8px 12px;
+  font-family: var(--mono); text-decoration: none;
+}
+.skip:focus { top: 12px; }
+
+a { color: inherit; }
+
+:focus-visible { outline: 2px solid var(--brass); outline-offset: 3px; }
+
+.page {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 0 var(--gutter) 48px;
+  transition: filter .35s ease;
+}
+
+/* ---------------- Шапка ---------------- */
+
+.masthead {
+  padding: 28px 0 40px;
+  border-bottom: 1px solid rgba(184, 150, 79, 0.35);
+  position: relative;
+}
+
+.masthead-top {
+  display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+  font-size: 12px; text-transform: uppercase; color: var(--cream-dim);
+  padding-bottom: 10px; border-bottom: 1px solid rgba(184, 150, 79, 0.25);
+}
+
+.series-label {
+  margin: 40px 0 8px;
+  font-size: 13px; text-transform: uppercase; color: var(--brass);
+  letter-spacing: 0.18em;
+}
+
+.series-title {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(48px, 11vw, 132px);
+  line-height: 0.92;
+  margin: 0 0 24px;
+  letter-spacing: -0.01em;
+  color: var(--cream);
+}
+.series-title span { font-style: italic; color: var(--brass); }
+
+.manifesto {
+  max-width: 44ch;
+  font-family: var(--serif);
+  font-size: clamp(19px, 2.2vw, 24px);
+  line-height: 1.45;
+  margin: 0 0 28px;
+  color: var(--cream);
+}
+
+.masthead-meta {
+  display: flex; flex-wrap: wrap; gap: 8px 32px; margin: 0;
+  font-size: 12px; color: var(--cream-dim);
+}
+.masthead-meta div { display: flex; gap: 8px; }
+.masthead-meta dt { text-transform: uppercase; }
+.masthead-meta dt::after { content: ":"; }
+.masthead-meta dd { margin: 0; color: var(--cream); }
+
+/* ---------------- Секции ---------------- */
+
+.section-head {
+  display: flex; align-items: baseline; justify-content: space-between;
+  flex-wrap: wrap; gap: 8px 24px;
+  margin: 56px 0 20px;
+}
+.section-head h2,
+.colophon h2 {
+  font-family: var(--serif); font-weight: 400;
+  font-size: clamp(28px, 4vw, 40px);
+  margin: 0; line-height: 1.1;
+}
+.sec-no { font-size: 0.45em; color: var(--brass); vertical-align: 0.4em; margin-right: 6px; }
+.hint { margin: 0; font-size: 13px; color: var(--cream-dim); }
+
+/* ---------------- 3D-полка ---------------- */
+
+.shelf-3d {
+  display: none;
+  position: relative;
+  height: 500px;
+  margin: 0 calc(-1 * var(--gutter)) 8px;
+  touch-action: pan-y;
+}
+.has-3d .shelf-3d { display: block; }
+.shelf-3d canvas { display: block; width: 100%; height: 100%; }
+.shelf-3d.is-hot canvas { cursor: pointer; }
+
+.shelf-tip {
+  position: absolute; left: 50%; bottom: 10px; transform: translateX(-50%);
+  background: var(--paper); color: var(--ink);
+  font-size: 12px; padding: 5px 10px;
+  box-shadow: 0 4px 14px rgba(0,0,0,.4);
+  pointer-events: none; white-space: nowrap;
+}
+
+@media (max-width: 759px) {
+  .has-3d .shelf-3d { display: none; }
+}
+
+/* ---------------- Каталожный ящик ---------------- */
+
+.drawer {
+  position: relative;
+  padding: 36px 20px 24px;
+  background:
+    linear-gradient(180deg, rgba(0,0,0,.55), rgba(0,0,0,.2) 40px, rgba(0,0,0,.35)),
+    repeating-linear-gradient(90deg, #3a2414 0 11px, #34200f 11px 13px, #3f2817 13px 29px);
+  border: 10px solid #4a2e19;
+  border-top-width: 14px;
+  box-shadow: inset 0 10px 24px rgba(0,0,0,.6), 0 18px 40px rgba(0,0,0,.45);
+  border-radius: 3px;
+}
+
+.drawer-plate {
+  position: absolute; top: -14px; left: 50%; transform: translate(-50%, -50%);
+  display: flex; gap: 14px; align-items: center;
+  padding: 5px 16px;
+  font-size: 11px; text-transform: uppercase; letter-spacing: 0.14em;
+  color: #2a1c0c;
+  background: linear-gradient(180deg, #e2c47e, var(--brass) 50%, #8c6f35);
+  border-radius: 2px;
+  box-shadow: 0 2px 0 #5d4722, 0 4px 10px rgba(0,0,0,.5);
+  white-space: nowrap;
+}
+.drawer-plate span + span { border-left: 1px solid rgba(42,28,12,.4); padding-left: 14px; }
+
+.catalog {
+  list-style: none; margin: 0; padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+  gap: 18px;
+}
+
+.card {
+  --spine: #555;
+  --spine-ink: #eee;
+  position: relative;
+  display: grid;
+  grid-template-columns: 46px 1fr;
+  color: var(--ink);
+  background:
+    linear-gradient(180deg, transparent 0 58px, rgba(0,0,0,0) 58px),
+    repeating-linear-gradient(180deg, transparent 0 25px, var(--paper-rule) 25px 26px),
+    linear-gradient(180deg, var(--paper), var(--paper-2));
+  background-position: 0 6px;
+  box-shadow: 0 1px 0 rgba(255,255,255,.5) inset, 0 6px 16px rgba(0,0,0,.45);
+  border-radius: 2px;
+  transition: transform .25s ease, box-shadow .25s ease;
+  cursor: default;
+  min-width: 0;
+}
+.card:hover,
+.card.is-active,
+.card:focus-within {
+  transform: translateY(-6px);
+  box-shadow: 0 1px 0 rgba(255,255,255,.5) inset, 0 14px 26px rgba(0,0,0,.55);
+}
+
+/* корешок слева */
+.card-spine {
+  background: var(--spine);
+  color: var(--spine-ink);
+  display: flex; flex-direction: column; align-items: center; justify-content: space-between;
+  padding: 10px 0;
+  border-radius: 2px 0 0 2px;
+  box-shadow: inset -4px 0 6px rgba(0,0,0,.25), inset 3px 0 0 rgba(255,255,255,.12);
+}
+.card-spine .cs-num { font-family: var(--serif); font-size: 18px; font-weight: 700; }
+.card-spine .cs-title {
+  writing-mode: vertical-rl; transform: rotate(180deg);
+  font-family: var(--serif); font-size: 15px; letter-spacing: .08em; text-transform: uppercase;
+  white-space: nowrap; overflow: hidden; max-height: 240px;
+}
+.card-spine .cs-band { width: 60%; height: 2px; background: currentColor; opacity: .55; }
+
+.card-body {
+  position: relative;
+  padding: 14px 16px 16px 18px;
+  border-left: 1px solid var(--paper-margin);
+  min-width: 0;
+  overflow: hidden;
+}
+/* отверстие под штангу ящика */
+.card-body::before {
+  content: ""; position: absolute; left: 50%; bottom: 6px; width: 14px; height: 14px;
+  margin-left: -7px; border-radius: 50%;
+  background: #2b1b0e; box-shadow: inset 0 2px 3px rgba(0,0,0,.6);
+}
+
+.card-code {
+  display: flex; justify-content: space-between; gap: 8px;
+  font-size: 12px; color: var(--ink-soft); margin: 0 0 6px;
+}
+.card-title {
+  font-family: var(--serif); font-weight: 700;
+  font-size: 28px; line-height: 1.05; margin: 0;
+  letter-spacing: 0.01em;
+}
+.card-sub { font-family: var(--serif); font-style: italic; font-size: 18px; margin: 2px 0 12px; }
+
+.card-fields { margin: 0 0 14px; font-family: var(--mono); font-size: 13px; line-height: 1.55; }
+.card-fields div { display: grid; grid-template-columns: 62px 1fr; gap: 8px; }
+.card-fields dt { color: var(--ink-soft); }
+.card-fields dd { margin: 0; }
+
+.card-actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding-bottom: 18px; }
+
+.btn {
+  font-family: var(--mono); font-size: 13px; text-transform: uppercase; letter-spacing: .08em;
+  padding: 9px 14px; border: 1.5px solid var(--ink); background: transparent; color: var(--ink);
+  cursor: pointer; border-radius: 1px;
+  transition: background .2s, color .2s;
+}
+.btn:hover:not(:disabled) { background: var(--ink); color: var(--paper); }
+.btn:disabled { opacity: .45; cursor: not-allowed; border-style: dashed; }
+
+.peek {
+  font-family: var(--mono); font-size: 12px; color: var(--ink-soft);
+  background: none; border: 0; padding: 4px 0; cursor: pointer; text-decoration: underline dotted;
+}
+
+/* штамп */
+.stamp {
+  position: absolute; right: 12px; top: 40px;
+  font-family: var(--mono); font-size: 13px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .12em; line-height: 1.1; text-align: center;
+  padding: 5px 9px;
+  border: 2.5px double currentColor; border-radius: 4px;
+  transform: rotate(-9deg);
+  opacity: .82; mix-blend-mode: multiply;
+  pointer-events: none;
+}
+.stamp small { display: block; font-size: 10px; letter-spacing: .06em; font-weight: 400; }
+.stamp--out { color: var(--stamp); }
+.stamp--press { color: var(--stamp-blue); transform: rotate(6deg); }
+
+/* ---------------- Как сделан ---------------- */
+
+.howto-list {
+  list-style: none; margin: 0; padding: 0;
+  border-top: 1px solid rgba(184,150,79,.35);
+}
+.howto-list li {
+  display: grid;
+  grid-template-columns: 120px 220px 1fr;
+  gap: 8px 24px;
+  padding: 14px 0;
+  border-bottom: 1px dashed rgba(184,150,79,.3);
+  align-items: baseline;
+}
+.howto-list .h-code { font-family: var(--mono); font-size: 13px; color: var(--brass); }
+.howto-list .h-name { font-family: var(--serif); font-size: 20px; }
+.howto-list .h-tech { color: var(--cream); }
+.howto-list .h-kind {
+  font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: .1em;
+  color: var(--wood-1); background: var(--cream-dim); padding: 1px 6px; margin-right: 8px;
+  white-space: nowrap;
+}
+
+@media (max-width: 759px) {
+  .howto-list li { grid-template-columns: 1fr; gap: 2px; }
+}
+
+/* ---------------- Колофон ---------------- */
+
+.colophon {
+  margin-top: 64px;
+  padding: 28px 24px 24px;
+  color: var(--ink);
+  background: linear-gradient(180deg, var(--paper), var(--paper-2));
+  box-shadow: 0 10px 30px rgba(0,0,0,.45);
+  border-radius: 2px;
+}
+.colophon h2 { margin-bottom: 18px; }
+.colophon .sec-no { color: var(--stamp); }
+.colophon-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+  gap: 16px 28px;
+}
+.colophon-grid p { margin: 0; font-size: 16px; }
+.mark { font-size: 12px; padding: 0 5px; border: 1.5px solid currentColor; border-radius: 2px; white-space: nowrap; }
+.mark-yes { color: #2f5d3a; }
+.mark-no { color: var(--stamp); }
+
+.imprint {
+  margin: 24px 0 0; padding-top: 14px; border-top: 1px solid rgba(31,26,20,.25);
+  font-size: 12px; color: var(--ink-soft);
+  display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; align-items: center;
+}
+.imprint-stamp {
+  color: var(--stamp); border: 2px solid currentColor; padding: 3px 8px; transform: rotate(-3deg);
+  text-transform: uppercase; letter-spacing: .1em;
+}
+
+/* ============================================================
+   «Заглянуть в книгу»: перекраска обложки в стиль тома
+   ============================================================ */
+
+.fx {
+  position: fixed; inset: 0; z-index: 30;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .3s ease;
+}
+.fx.on { opacity: 1; transition-duration: .08s; }
+.fx canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.fx-tag {
+  position: absolute; right: 16px; top: 16px;
+  font-size: 12px; text-transform: uppercase; letter-spacing: .1em;
+  padding: 4px 8px; background: var(--paper); color: var(--ink);
+  box-shadow: 0 3px 10px rgba(0,0,0,.4);
+}
+
+/* I · HAEMA — ASCII-шум и ксерокопия */
+body[data-fx="ascii"] .page { filter: grayscale(1) contrast(1.9) brightness(1.05); }
+body[data-fx="ascii"] .fx canvas { mix-blend-mode: normal; }
+body[data-fx="ascii"] .fx { background: rgba(236, 232, 222, 0.14); }
+
+/* II · MYCELIUM — ризограф, сдвиг красок */
+body[data-fx="riso"] .page { filter: saturate(1.4) hue-rotate(-12deg); }
+body[data-fx="riso"] .page :is(h1, h2, h3, p, dd, dt, span, li, button, a) {
+  text-shadow: -3px 2px 0 rgba(255, 72, 176, 0.75), 3px -1px 0 rgba(0, 120, 191, 0.7);
+}
+body[data-fx="riso"] .fx { background: rgba(255, 72, 176, 0.10); }
+body[data-fx="riso"] .fx canvas { mix-blend-mode: multiply; }
+
+/* III · Ночная смена — растр и красный кирпич */
+body[data-fx="raster"] .page { filter: sepia(.55) contrast(1.15); }
+body[data-fx="raster"] .fx canvas { mix-blend-mode: multiply; }
+body[data-fx="raster"] .fx { background: rgba(236, 222, 190, 0.12); }
+
+/* IV · Кабинет восприятия — муар */
+body[data-fx="moire"] .page { filter: grayscale(1) contrast(1.3); }
+body[data-fx="moire"] .fx canvas { mix-blend-mode: difference; }
+
+/* V · BLOB — VHS-дрожь */
+body[data-fx="vhs"] .page {
+  filter: saturate(1.8) contrast(1.15) hue-rotate(8deg);
+  animation: vhs-jitter .16s steps(2) infinite;
+}
+body[data-fx="vhs"] .page :is(h1, h2, h3, p, dd, dt, span, li, button, a) {
+  text-shadow: 2px 0 0 rgba(255, 0, 60, .7), -2px 0 0 rgba(0, 220, 255, .7);
+}
+body[data-fx="vhs"] .fx { background: rgba(20, 0, 60, 0.12); }
+
+@keyframes vhs-jitter {
+  0%   { transform: translate(0, 0) skewX(0deg); }
+  25%  { transform: translate(-3px, 1px) skewX(-.6deg); }
+  50%  { transform: translate(2px, 0) skewX(.3deg); }
+  75%  { transform: translate(-1px, -1px) skewX(0deg); }
+  100% { transform: translate(0, 0); }
+}
+
+/* ============================================================
+   Открытие тома
+   ============================================================ */
+
+.opening {
+  position: fixed; inset: 0; z-index: 40;
+  display: grid; place-items: center;
+  background: rgba(12, 7, 3, 0);
+  perspective: 1600px;
+  pointer-events: none;
+  visibility: hidden;
+}
+.opening.run {
+  visibility: visible; pointer-events: auto;
+  background: rgba(12, 7, 3, .88);
+  transition: background .3s ease;
+}
+.book {
+  --c: #7a1d1d; --ci: #f0e6d0;
+  position: relative;
+  width: min(300px, 62vw);
+  aspect-ratio: 2 / 3;
+  transform-style: preserve-3d;
+  transform: scale(.6) rotateX(8deg);
+  opacity: 0;
+}
+.opening.run .book { animation: book-in .35s ease-out forwards, book-zoom .45s .95s ease-in forwards; }
+
+.book-pages,
+.book-cover {
+  position: absolute; inset: 0; border-radius: 2px 6px 6px 2px;
+}
+.book-pages {
+  background: repeating-linear-gradient(180deg, var(--paper) 0 22px, #e6dcc4 22px 23px);
+  color: var(--ink);
+  padding: 28px 22px;
+  box-shadow: 0 20px 50px rgba(0,0,0,.6);
+  display: flex; flex-direction: column; gap: 10px;
+}
+.bp-code { margin: 0; font-size: 12px; color: var(--ink-soft); }
+.bp-title { margin: 0; font-family: var(--serif); font-size: 30px; line-height: 1.05; }
+.bp-note { margin: auto 0 0; font-size: 12px; color: var(--stamp); }
+
+.book-cover {
+  background: var(--c); color: var(--ci);
+  transform-origin: left center;
+  backface-visibility: hidden;
+  display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 10px;
+  text-align: center; padding: 20px;
+  box-shadow: inset 10px 0 18px rgba(0,0,0,.35), inset 0 0 0 8px rgba(0,0,0,.08), inset 0 0 0 10px rgba(255,255,255,.12);
+}
+.opening.run .book-cover { animation: cover-open .7s .3s cubic-bezier(.5,.05,.3,1) forwards; }
+.bc-num { font-size: 13px; letter-spacing: .2em; opacity: .8; }
+.bc-title { font-family: var(--serif); font-size: 34px; line-height: 1; font-weight: 700; }
+.bc-sub { font-family: var(--serif); font-style: italic; font-size: 18px; }
+
+@keyframes book-in { to { opacity: 1; transform: scale(1) rotateX(0deg); } }
+@keyframes cover-open { to { transform: rotateY(-165deg); } }
+@keyframes book-zoom { to { opacity: 0; transform: scale(3.2) rotateX(0deg); } }
+
+/* ============================================================
+   Телефон
+   ============================================================ */
+
+@media (max-width: 759px) {
+  body { font-size: 16px; }
+  .masthead { padding-top: 16px; }
+  .series-label { margin-top: 28px; }
+  .drawer { padding: 32px 10px 16px; border-width: 6px; border-top-width: 10px; margin: 0 -4px; }
+  .card { grid-template-columns: 40px 1fr; }
+  .stamp { top: 12px; right: 10px; font-size: 11px; }
+  .card-code, .card-title { padding-right: 88px; }
+  .card-title { font-size: 23px; }
+  .fx-tag { left: 16px; right: 16px; top: 12px; font-size: 11px; }
+  .colophon { padding: 22px 16px 18px; }
+}
+
+/* ============================================================
+   Меньше движения
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; animation-delay: 0s !important; }
+  body[data-fx="vhs"] .page { animation: none; }
+  .card:hover, .card.is-active, .card:focus-within { transform: none; }
+}
