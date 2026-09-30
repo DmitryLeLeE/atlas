@@ -34,7 +34,7 @@ const VOLUMES = [
     tech: 'Симуляция роста гиф: тысячи агентов ищут пищу, след печатается в две краски со сдвигом.',
     effect: 'riso',
     spine: '#2c4a38', spineInk: '#f2c9dc',
-    url: null,
+    url: 'https://dmitrylelee.github.io/MYCELIUM/',
   },
   {
     id: 'night',
@@ -48,7 +48,7 @@ const VOLUMES = [
     tech: 'Живая гипнограмма: модель циклов сна за ночь, свёрстанная растром и красным кирпичом.',
     effect: 'raster',
     spine: '#1f2b47', spineInk: '#e9c7a0',
-    url: null,
+    url: 'https://dmitrylelee.github.io/night_dev/',
   },
   {
     id: 'cabinet',
@@ -76,7 +76,7 @@ const VOLUMES = [
     tech: 'Модель Physarum на GPU: слизевик прокладывает сеть дорог поверх затёртой видеокассеты.',
     effect: 'vhs',
     spine: '#b8961e', spineInk: '#1a1405',
-    url: null,
+    url: 'https://dmitrylelee.github.io/blob/',
   },
 ];
 
