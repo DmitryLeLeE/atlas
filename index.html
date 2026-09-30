@@ -8,11 +8,10 @@
   <meta name="theme-color" content="#efe7d6">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=Oswald:wght@500;700&family=PT+Mono&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=7">
-  <script type="importmap">
-    { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.min.js" } }
-  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=Oswald:wght@500;700&family=PT+Mono&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <!-- шрифты томов: каждый лист в папке набран так же, как его сайт -->
+  <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Literata:ital,opsz,wght@0,7..72,600;0,7..72,800;1,7..72,400&family=Onest:wght@400;500;700&family=Playfair+Display:wght@900&family=Rubik+Glitch&family=Russo+One&family=Sofia+Sans+Extra+Condensed:wght@900&family=Spectral+SC:wght@500;700&family=Unbounded:wght@700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=9">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23efe7d6'/%3E%3Cpath d='M6 26V6h5l6 12V6h5v20h-5L11 14v12z' fill='%231b1916'/%3E%3Ccircle cx='24' cy='24' r='5' fill='%23d42a1e'/%3E%3C/svg%3E">
 </head>
 <body>
@@ -89,20 +88,11 @@
     <main>
       <section class="volumes" id="volumes" aria-labelledby="volumes-h">
         <div class="section-head">
-          <h2 id="volumes-h"><span class="sec-no mono">§ 1</span>Полка</h2>
-          <p class="hint hand" id="hint">потрогай корешки — страница на&nbsp;секунду станет томом</p>
+          <h2 id="volumes-h"><span class="sec-no mono">§ 1</span>Картотека</h2>
+          <p class="hint hand" id="hint">наведи на папку — она откроется; нажми на лист — войдёшь в том</p>
         </div>
 
-        <div class="shelf-3d" id="shelf3d" aria-hidden="true">
-          <div class="shelf-tip mono" id="shelfTip" hidden></div>
-        </div>
-
-        <div class="section-head section-head--sub">
-          <h2 class="h-sub"><span class="sec-no mono">§ 2</span>Образцы печати</h2>
-          <p class="hint mono">по одному оттиску из каждого тома</p>
-        </div>
-
-        <ol class="catalog" id="catalog"></ol>
+        <ol class="catalog" id="catalog" aria-label="Тома серии"></ol>
         <noscript>
           <ol class="catalog catalog--plain">
             <li><a href="https://dmitrylelee.github.io/hiv/">I · HAEMA — Кровь и вирусы</a></li>
@@ -117,7 +107,7 @@
 
       <section class="howto" aria-labelledby="howto-h">
         <div class="section-head">
-          <h2 id="howto-h"><span class="sec-no mono">§ 3</span>Как сделан каждый том</h2>
+          <h2 id="howto-h"><span class="sec-no mono">§ 2</span>Как сделан каждый том</h2>
         </div>
         <ol class="howto-list" id="howto"></ol>
       </section>
@@ -125,7 +115,7 @@
 
     <footer class="colophon" aria-labelledby="colophon-h">
       <span class="tape tape--c" aria-hidden="true"></span>
-      <h2 id="colophon-h"><span class="sec-no mono">§ 4</span>Колофон</h2>
+      <h2 id="colophon-h"><span class="sec-no mono">§ 3</span>Колофон</h2>
       <div class="colophon-grid">
         <p><strong>Источники.</strong> В каждом томе есть список литературы: статьи, обзоры, учебники. Утверждение без источника в атлас не попадает.</p>
         <p><strong>Пометки.</strong> Факты отмечены на полях: <span class="mark mark-yes mono">доказано</span> — устойчивый научный консенсус, <span class="mark mark-no mono">спорно</span> — гипотезы и открытые вопросы.</p>
@@ -145,24 +135,8 @@
     <div class="fx-tag mono" id="fxTag"></div>
   </div>
 
-  <!-- Анимация открытия тома -->
-  <div class="opening" id="opening" aria-hidden="true">
-    <div class="book">
-      <div class="book-pages">
-        <p class="mono bp-code"></p>
-        <p class="bp-title"></p>
-        <p class="mono bp-note">открывается…</p>
-      </div>
-      <div class="book-cover">
-        <span class="bc-num mono"></span>
-        <span class="bc-title"></span>
-        <span class="bc-sub"></span>
-      </div>
-    </div>
-  </div>
-
   <p class="sr-only" aria-live="polite" id="live"></p>
 
-  <script type="module" src="main.js?v=7"></script>
+  <script type="module" src="main.js?v=9"></script>
 </body>
 </html>
