@@ -652,6 +652,68 @@ a { color: inherit; }
 .sheet--pepper .s-warn .w-head { justify-content: flex-start; align-items: center; gap: 1.6cqw; margin-bottom: 1cqw; padding-bottom: 1.2cqw; border-bottom: 2px solid #1b1712; font-family: "Unbounded", sans-serif; font-weight: 900; font-size: 3.2cqw; text-transform: uppercase; }
 .sheet--pepper .s-warn .w-head i { font-style: normal; display: grid; place-items: center; width: 5cqw; height: 4.4cqw; background: #1b1712; color: #ffc21a; clip-path: polygon(50% 0, 100% 100%, 0 100%); font-size: 2.6cqw; font-weight: 900; padding-top: 1.2cqw; }
 
+/* VIII · MORS — готическая рукопись: темнота, свеча, кость и кровь */
+.sheet--mors {
+  isolation: isolate; /* зерно и виньетка листа не должны лезть поверх обложки */
+  background: #0a0807; color: #9a8b74; font-family: "Old Standard TT", Georgia, serif;
+}
+.sheet--mors > .s-in { padding: 15cqw 6cqw 4cqw 8cqw; }
+.sheet--mors::before {
+  content: ""; position: absolute; inset: 0; z-index: 3; pointer-events: none;
+  background:
+    radial-gradient(ellipse at 50% 110%, rgba(200,134,47,.12), transparent 55%),
+    radial-gradient(ellipse at 50% 50%, transparent 40%, rgba(0,0,0,.6) 82%, rgba(0,0,0,.9) 100%);
+}
+.sheet--mors::after {
+  content: ""; position: absolute; inset: 0; z-index: 4; pointer-events: none; mix-blend-mode: overlay; opacity: .5;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.sheet--mors .s-hud {
+  position: absolute; top: 0; left: 0; right: 0; z-index: 2;
+  display: flex; justify-content: space-between; align-items: flex-start;
+  padding: 3.6cqw 5cqw 0 6cqw;
+}
+.sheet--mors .s-brand b { display: block; font: 400 5.6cqw/1 "UnifrakturMaguntia", "Old English Text MT", serif; color: #e4d8bf; text-shadow: 0 0 3cqw rgba(200,134,47,.35); }
+.sheet--mors .s-brand small { display: block; margin-top: .9cqw; font: 400 1.35cqw/1 "PT Mono", monospace; letter-spacing: .2em; text-transform: uppercase; color: #5f5242; }
+.sheet--mors .s-trk { text-align: right; font: 400 1.8cqw/1 "PT Mono", monospace; letter-spacing: .1em; color: #5f5242; }
+.sheet--mors .s-trk b { font-weight: 400; color: #c8862f; }
+.sheet--mors .s-trk small { display: block; margin-top: 1cqw; font: 700 3cqw/1 "Caveat", cursive; letter-spacing: .02em; color: #9a8b74; }
+.sheet--mors .s-bg {
+  position: absolute; z-index: 0; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  font: 400 80cqw/1 "UnifrakturMaguntia", serif; color: transparent;
+  -webkit-text-stroke: 1px rgba(200,134,47,.1); pointer-events: none;
+}
+.sheet--mors .s-drip { position: absolute; z-index: 2; left: 3.4cqw; top: -15cqw; width: 1px; height: 30cqw; background: linear-gradient(rgba(139,26,26,.2), #8b1a1a); }
+.sheet--mors .s-drip::after { content: ""; position: absolute; left: -.8cqw; bottom: -1.2cqw; width: 1.7cqw; height: 2cqw; border-radius: 50% 50% 55% 55% / 40% 40% 60% 60%; background: #b52a22; box-shadow: 0 0 1.4cqw rgba(181,42,34,.7); }
+.sheet--mors .s-rail { position: absolute; z-index: 2; right: 2.6cqw; top: 26cqw; display: grid; justify-items: end; gap: .6cqw; font: 400 2cqw/1 "Old Standard TT", serif; color: #5f5242; }
+.sheet--mors .s-rail .on { color: #b52a22; text-shadow: 0 0 1cqw rgba(181,42,34,.8); font-size: 2.6cqw; }
+.sheet--mors .s-rail i { margin-right: 1.4cqw; font: 700 2.2cqw/1 "Cormorant Garamond", serif; color: #e4d8bf; text-shadow: none; vertical-align: .2cqw; }
+.sheet--mors :is(.s-kicker, .s-title, .s-scrawl, .s-lead, .s-glass) { position: relative; z-index: 1; }
+.sheet--mors .s-kicker { display: flex; align-items: center; gap: 2cqw; margin-bottom: 1cqw; font: 400 1.6cqw/1 "PT Mono", monospace; letter-spacing: .22em; text-transform: uppercase; color: #c8862f; }
+.sheet--mors .s-kicker i { width: 6cqw; height: 1px; background: #c8862f; opacity: .5; }
+.sheet--mors .s-title .bl {
+  display: block; font: 400 21cqw/.9 "UnifrakturMaguntia", "Old English Text MT", serif; color: #e4d8bf;
+  text-shadow: 0 0 6cqw rgba(200,134,47,.3), 0 .5cqw 0 rgba(0,0,0,.6);
+}
+.sheet--mors .s-title .ru { display: block; margin-top: .4cqw; font: 500 italic 4.2cqw/1.1 "Cormorant Garamond", "Old Standard TT", serif; color: #9a8b74; }
+.sheet--mors .s-scrawl {
+  display: inline-block; position: relative; margin: 1.4cqw 0 2.4cqw;
+  font: 700 4.8cqw/1.15 "Caveat", cursive; color: #b52a22;
+  transform: rotate(-2deg); transform-origin: left; text-shadow: 0 0 2cqw rgba(181,42,34,.3);
+}
+.sheet--mors .s-scrawl::after { content: ""; position: absolute; left: -1cqw; right: -1.5cqw; bottom: -.6cqw; height: .45cqw; border-radius: 50%; background: #b52a22; transform: rotate(-1.5deg); }
+.sheet--mors .s-lead { max-width: 52cqw; font-size: 2.45cqw; line-height: 1.6; color: #9a8b74; }
+.sheet--mors .s-lead em { color: #e4d8bf; }
+.sheet--mors .s-glass { position: absolute; right: 9cqw; top: 20cqw; margin: 0; width: 22cqw; text-align: center; }
+.sheet--mors .s-glass svg { display: block; width: 100%; height: auto; overflow: visible; filter: drop-shadow(0 0 2.5cqw rgba(200,134,47,.2)); }
+.sheet--mors .s-glass .frame { fill: none; stroke: #e4d8bf; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; filter: url(#wobble); }
+.sheet--mors .s-glass .glint { fill: none; stroke: #e4d8bf; stroke-width: 1.2; opacity: .5; }
+.sheet--mors .s-glass .sand { fill: #c8862f; }
+.sheet--mors .s-glass .stream { stroke: #e8b45a; stroke-width: 1.8; stroke-dasharray: 3 4; animation: mors-sand .5s linear infinite; }
+@keyframes mors-sand { to { stroke-dashoffset: -14; } }
+.sheet--mors figcaption { margin-top: 1.4cqw; font: 400 2.6cqw/1 "Marck Script", "Caveat", cursive; color: #c8862f; transform: rotate(-3deg); white-space: nowrap; }
+@media (prefers-reduced-motion: reduce) { .sheet--mors .s-glass .stream { animation: none; } }
+
 /* лист, вынутый из папки, разворачивается на экран */
 .sheet--launch {
   position: fixed; z-index: 60; margin: 0; inset: auto;
@@ -770,6 +832,10 @@ body[data-fx="blot"] .fx canvas { mix-blend-mode: multiply; }
 /* VII · Жгучий атлас — жар */
 body[data-fx="heat"] .page { filter: saturate(1.6) contrast(1.05) sepia(.25) hue-rotate(-12deg); }
 body[data-fx="heat"] .fx canvas { mix-blend-mode: multiply; }
+
+/* VIII · MORS — свет гаснет до одной свечи */
+body[data-fx="mors"] .page { filter: sepia(.7) brightness(.5) contrast(1.25); }
+body[data-fx="mors"] .fx { background: rgba(7, 6, 11, 0.45); }
 
 /* VI · BLOB — VHS-дрожь */
 body[data-fx="vhs"] .page {
