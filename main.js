@@ -132,16 +132,16 @@ const VOLUMES = [
     num: 'VIII',
     code: '616-036.88',
     title: 'MORS',
-    subtitle: 'Что происходит, когда мы умираем',
-    hook: 'Умирающий мозг может напоследок вспыхнуть гамма-волнами — как при ясном сознании.',
-    topic: 'клиническая смерть, мозг, распад, горе',
-    style: 'судебная тьма, медь и ASCII',
-    era: 'медь во тьме',
+    subtitle: 'Атлас смерти и перехода',
+    hook: 'Каждую секунду в твоём теле умирают около 3,8 миллиона клеток. Тело давно умеет умирать — по частям.',
+    topic: 'смерть мозга и тела, распад, ритуалы, горе',
+    style: 'готическая рукопись, пергамент при свече',
+    era: 'свеча',
     note: 'memento mori',
-    kind: 'туман',
-    tech: 'Медный туман и тлеющие искры на холсте; вдоль страницы стекает капля-прогресс, заголовки глав проявляются по буквам.',
+    kind: 'песочные часы',
+    tech: 'Песочные часы — это прокрутка: песок сыплется, пока читаешь. Листы рваного пергамента, скотч, штампы и пометки кровью на полях.',
     effect: 'mors',
-    spine: '#07060b', spineInk: '#d4a050',
+    spine: '#8b1a1a', spineInk: '#e4d8bf',
     url: 'https://dmitrylelee.github.io/after_death/',
   },
 ];
@@ -182,13 +182,6 @@ function el(tag, attrs = {}, children = []) {
 function field(dt, dd) {
   return el('div', {}, [el('dt', { text: dt }), el('dd', { text: dd })]);
 }
-
-// ASCII-титул MORS — тот же, что на обложке тома
-const MORS_ART = String.raw`  __  __  ___  ____  ____
- |  \/  |/ _ \|  _ \/ ___|
- | |\/| | | | | |_) \___ \
- | |  | | |_| |  _ < ___) |
- |_|  |_|\___/|_| \_\____/`;
 
 // титульные листы томов — в их собственной вёрстке
 const SHEETS = {
@@ -250,14 +243,31 @@ const SHEETS = {
       <p><span>мишень</span><b>TRPV1</b></p>
     </div>`,
   mors: () => `
-    <div class="s-hud"><p><b>MORS</b><small>atlas mortis et transitus · I</small></p><p class="s-trk"><b>01</b> / 16<small>Порог смерти</small></p></div>
+    <div class="s-hud"><p class="s-brand"><b>Mors</b><small>atlas mortis et transitus</small></p><p class="s-trk"><b>01</b> / 19<small>Порог</small></p></div>
     <span class="s-bg" aria-hidden="true">I</span>
     <span class="s-drip" aria-hidden="true"></span>
+    <p class="s-rail" aria-hidden="true"><span class="on"><i>Порог</i>†</span>${'<span>†</span>'.repeat(9)}</p>
     <p class="s-kicker"><i></i>tabula prima · mors<i></i></p>
-    <pre class="s-art">${MORS_ART.replace(/</g, '&lt;')}</pre>
-    <p class="s-latin">atlas mortis et transitus · scientia mortis</p>
+    <p class="s-title"><span class="bl">Mors</span><span class="ru">атлас смерти и&nbsp;перехода</span></p>
     <p class="s-scrawl">что там — за последней чертой?</p>
-    <p class="s-lead">Тело давно знает, как умирать — по&nbsp;одной клетке. Но&nbsp;что происходит, когда умираешь <em>весь?</em></p>`,
+    <p class="s-lead">Тело давно умеет умирать — по&nbsp;частям. Но&nbsp;что происходит, когда умираешь <em>весь</em>?</p>
+    <figure class="s-glass">
+      <svg viewBox="0 0 200 300" aria-hidden="true">
+        <defs><clipPath id="mors-top"><path d="M42 42 C40 102, 92 120, 96 150 L104 150 C108 120, 160 102, 158 42 Z"/></clipPath>
+        <clipPath id="mors-bot"><path d="M96 150 C92 180, 40 198, 42 258 L158 258 C160 198, 108 180, 104 150 Z"/></clipPath></defs>
+        <rect class="sand" x="30" y="66" width="140" height="100" clip-path="url(#mors-top)"/>
+        <path class="sand" d="M30 258 L30 248 Q100 222 170 248 L170 258 Z" clip-path="url(#mors-bot)"/>
+        <line class="stream" x1="100" y1="148" x2="100" y2="240"/>
+        <g class="frame">
+          <path d="M42 42 C40 102, 92 120, 96 150 L104 150 C108 120, 160 102, 158 42 Z"/>
+          <path d="M96 150 C92 180, 40 198, 42 258 L158 258 C160 198, 108 180, 104 150 Z"/>
+          <path d="M22 23 L178 21 L177 40 L23 41 Z M23 260 L178 261 L177 278 L22 277 Z M30 40 Q31 150 30 260 M170 40 Q169 150 170 260"/>
+          <circle cx="30" cy="16" r="5"/><circle cx="170" cy="16" r="5"/><circle cx="30" cy="284" r="5"/><circle cx="170" cy="284" r="5"/>
+        </g>
+        <path class="glint" d="M52 60 C56 90, 64 106, 80 118"/>
+      </svg>
+      <figcaption>песок = твоя прокрутка</figcaption>
+    </figure>`,
 };
 
 const TILTS = [-1.2, 0.9, -0.5, 1.3, -0.9, 0.6, -0.7, 1.1];
@@ -635,31 +645,29 @@ const EFFECTS = {
     }
   },
 
-  // VIII · MORS: страница гаснет, медный туман, искры и капля по краю
+  // VIII · MORS: свет гаснет до одной свечи, в темноте тлеют искры
   mors(c, w, h, t) {
     c.clearRect(0, 0, w, h);
     const fall = Math.min(1, 0.35 + t / 600);
-    const R = Math.hypot(w, h) / 2;
-    const v = c.createRadialGradient(w / 2, h / 2, R * (0.55 - 0.35 * fall), w / 2, h / 2, R);
-    v.addColorStop(0, 'rgba(7,6,11,0)'); v.addColorStop(1, 'rgba(7,6,11,.92)');
+    const flick = 1 + Math.sin(t * 0.021) * 0.03 + Math.sin(t * 0.057) * 0.02;
+    const R = Math.hypot(w, h) / 2, cx = w / 2, cy = h * 0.62;
+    const v = c.createRadialGradient(cx, cy, R * (0.5 - 0.3 * fall) * flick, cx, cy, R * 1.1);
+    v.addColorStop(0, 'rgba(10,8,7,0)'); v.addColorStop(1, 'rgba(10,8,7,.95)');
     c.fillStyle = v; c.fillRect(0, 0, w, h);
-    for (let i = 0; i < 7; i++) {
-      const x = hash(i, 1) * w + Math.sin(t * 0.0007 + i) * 80, y = hash(1, i) * h + Math.cos(t * 0.0005 + i) * 50;
-      const r = (0.18 + hash(i, 2) * 0.22) * Math.max(w, h);
-      const gr = c.createRadialGradient(x, y, 0, x, y, r);
-      gr.addColorStop(0, 'rgba(176,122,56,.12)'); gr.addColorStop(1, 'rgba(176,122,56,0)');
-      c.fillStyle = gr; c.fillRect(0, 0, w, h);
-    }
+    const glow = c.createRadialGradient(cx, cy, 0, cx, cy, R * 0.45 * flick);
+    glow.addColorStop(0, 'rgba(232,180,90,.16)'); glow.addColorStop(1, 'rgba(200,134,47,0)');
+    c.fillStyle = glow; c.fillRect(0, 0, w, h);
     const tick = Math.floor(t / 120);
-    for (let i = 0; i < 60; i++) {
+    for (let i = 0; i < 50; i++) {
       const x = hash(i, 5) * w + Math.sin(t * 0.003 + i) * 14;
       const y = h - ((hash(5, i) * h + t * (0.08 + hash(i, 6) * 0.18)) % h);
-      c.fillStyle = `rgba(212,160,80,${(0.35 + 0.65 * hash(i, tick)).toFixed(2)})`;
+      c.fillStyle = `rgba(232,180,90,${(0.3 + 0.6 * hash(i, tick)).toFixed(2)})`;
       c.fillRect(x, y, 2, 2);
     }
+    // капля крови стекает по левому краю, как прогресс в томе
     const dy = Math.min(h, 40 + t * 0.9);
-    c.fillStyle = 'rgba(176,122,56,.85)';
-    c.fillRect(18, 0, 1, dy);
+    c.fillStyle = 'rgba(139,26,26,.8)'; c.fillRect(18, 0, 1, dy);
+    c.fillStyle = '#b52a22';
     c.beginPath(); c.arc(18.5, dy, 4.5, 0, Math.PI * 2); c.fill();
   },
 
@@ -781,7 +789,7 @@ addEventListener('pageshow', () => {
 const INK = {
   ink: '#1b1916', paper: '#efe7d6', red: '#d42a1e', pink: '#ff48b0',
   blue: '#0078bf', cyan: '#00a9c9', brick: '#c2402a', yellow: '#ffc21a',
-  copper: '#b07a38', ember: '#d4a050', void: '#07060b',
+  ember: '#c8862f', ember2: '#e8b45a', blood: '#b52a22', bone: '#e4d8bf', void: '#0a0807',
 };
 const PLATE_FONT = '"Oswald", "Arial Narrow", Impact, sans-serif';
 
@@ -983,44 +991,43 @@ const PLATE_FX = {
     }
   },
 
-  // VIII · медь во тьме: буквы награвированы медными штрихами по чёрному, сквозь туман
+  // VIII · при свече: буквы выведены костяными штрихами по темноте, пламя дрожит
   mors(p, g, w, h, t) {
     g.fillStyle = INK.void; g.fillRect(0, 0, w, h);
-    // огромный контур за текстом, как римская цифра главы
-    g.globalAlpha = 0.16;
-    g.drawImage(p.tints.copper, p.fs * 0.035, -p.fs * 0.025 + Math.sin(t * 0.001) * p.fs * 0.01, w, h);
+    const flick = 1 + Math.sin(t * 0.019) * 0.05 + Math.sin(t * 0.047) * 0.03;
+    const glow = g.createRadialGradient(w / 2, h * 1.05, 0, w / 2, h * 1.05, w * 0.6 * flick);
+    glow.addColorStop(0, 'rgba(200,134,47,.28)'); glow.addColorStop(1, 'rgba(200,134,47,0)');
+    g.fillStyle = glow; g.fillRect(0, 0, w, h);
+    // тень оттиска, как огромная цифра главы за текстом
+    g.globalAlpha = 0.12;
+    g.drawImage(p.tints.ember, p.fs * 0.035, -p.fs * 0.025, w, h);
     g.globalAlpha = 1;
     const b = p.buf.getContext('2d');
     b.setTransform(p.dpr, 0, 0, p.dpr, 0, 0);
     b.globalCompositeOperation = 'source-over';
     b.clearRect(0, 0, w, h);
-    b.strokeStyle = INK.copper;
-    const step = Math.max(3, p.fs / 26);
+    b.strokeStyle = INK.bone;
+    const step = Math.max(3, p.fs / 28);
     for (let y = -step; y < h + step; y += step) {
-      b.lineWidth = step * (0.42 + 0.3 * Math.sin(y * 0.05 + t * 0.0022));
-      b.beginPath(); b.moveTo(0, y); b.lineTo(w, y + step * 0.7); b.stroke();
+      b.lineWidth = step * (0.5 + 0.22 * Math.sin(y * 0.05 + t * 0.002));
+      b.beginPath(); b.moveTo(0, y); b.lineTo(w, y - step * 0.9); b.stroke();
     }
     b.setTransform(1, 0, 0, 1, 0, 0);
     b.globalCompositeOperation = 'destination-in';
     b.drawImage(p.mask, 0, 0);
     g.save();
-    g.shadowColor = 'rgba(176,122,56,.6)'; g.shadowBlur = p.fs * 0.08;
+    g.shadowColor = `rgba(200,134,47,${(0.45 * flick).toFixed(2)})`; g.shadowBlur = p.fs * 0.1;
     g.drawImage(p.buf, 0, 0, w, h);
     g.restore();
-    // медный туман ползёт поперёк
-    for (let i = 0; i < 4; i++) {
-      const x = ((hash(i, 8) * w + t * (0.03 + hash(i, 9) * 0.04)) % (w * 1.4)) - w * 0.2;
-      const y = hash(8, i) * h, r = (0.3 + hash(i, 7) * 0.3) * h;
-      const gr = g.createRadialGradient(x, y, 0, x, y, r);
-      gr.addColorStop(0, 'rgba(176,122,56,.13)'); gr.addColorStop(1, 'rgba(176,122,56,0)');
-      g.fillStyle = gr; g.fillRect(0, 0, w, h);
-    }
-    // тлеющие искры
+    // кровавая черта под словом, от руки
+    g.strokeStyle = INK.blood; g.lineWidth = Math.max(2, p.fs * 0.03); g.lineCap = 'round';
+    g.beginPath(); g.moveTo(w * 0.04, h * 0.9);
+    g.quadraticCurveTo(w * 0.5, h * 0.84, w * 0.96, h * 0.88); g.stroke();
     const tick = Math.floor(t / 110);
-    for (let i = 0; i < 40; i++) {
+    for (let i = 0; i < 36; i++) {
       const x = hash(i, 11) * w + Math.sin(t * 0.002 + i) * 8;
       const y = h - ((hash(11, i) * h + t * (0.02 + hash(i, 12) * 0.05)) % h);
-      g.fillStyle = hash(i, tick) > 0.5 ? INK.ember : INK.copper;
+      g.fillStyle = hash(i, tick) > 0.5 ? INK.ember2 : INK.ember;
       g.fillRect(x, y, 2, 2);
     }
   },

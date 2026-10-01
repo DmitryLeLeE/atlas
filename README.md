@@ -14,7 +14,7 @@
 | V | Кабинет восприятия — Испытуемый | https://dmitrylelee.github.io/psycho/ |
 | VI | BLOB — Слизевик | https://dmitrylelee.github.io/blob/ |
 | VII | Жгучий атлас — Как перец обманывает мозг | https://dmitrylelee.github.io/smth/ |
-| VIII | MORS — Что происходит, когда мы умираем | https://dmitrylelee.github.io/after_death/ |
+| VIII | MORS — Атлас смерти и перехода | https://dmitrylelee.github.io/after_death/ |
 
 Тома перечислены в массиве `VOLUMES` в начале `main.js`. У тома без `url` кнопка
 неактивна и стоит статус «в печати».
