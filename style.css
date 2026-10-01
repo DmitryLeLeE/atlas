@@ -652,6 +652,48 @@ a { color: inherit; }
 .sheet--pepper .s-warn .w-head { justify-content: flex-start; align-items: center; gap: 1.6cqw; margin-bottom: 1cqw; padding-bottom: 1.2cqw; border-bottom: 2px solid #1b1712; font-family: "Unbounded", sans-serif; font-weight: 900; font-size: 3.2cqw; text-transform: uppercase; }
 .sheet--pepper .s-warn .w-head i { font-style: normal; display: grid; place-items: center; width: 5cqw; height: 4.4cqw; background: #1b1712; color: #ffc21a; clip-path: polygon(50% 0, 100% 100%, 0 100%); font-size: 2.6cqw; font-weight: 900; padding-top: 1.2cqw; }
 
+/* VIII · MORS — судебная тьма: медь на чёрном, ASCII, туман */
+.sheet--mors {
+  background: radial-gradient(ellipse at 55% 45%, #14101a 0%, #07060b 70%);
+  color: #a09484; font-family: "PT Mono", var(--mono);
+}
+.sheet--mors > .s-in { padding: 13cqw 7cqw 5cqw 10cqw; }
+.sheet--mors::before {
+  content: ""; position: absolute; inset: 0; z-index: 3; pointer-events: none;
+  background: radial-gradient(ellipse at 50% 50%, transparent 40%, rgba(0,0,0,.55) 85%, rgba(0,0,0,.85) 100%);
+}
+.sheet--mors::after {
+  content: ""; position: absolute; inset: 0; z-index: 4; pointer-events: none; mix-blend-mode: overlay; opacity: .5;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.sheet--mors .s-hud {
+  position: absolute; top: 0; left: 0; right: 0; z-index: 2;
+  display: flex; justify-content: space-between; align-items: flex-start;
+  padding: 4cqw 5cqw 0 6cqw;
+}
+.sheet--mors .s-hud b { font-family: "Playfair Display", serif; font-weight: 900; font-size: 3cqw; letter-spacing: .35em; color: #b07a38; text-shadow: 0 0 3cqw rgba(176,122,56,.45); }
+.sheet--mors .s-hud small { display: block; margin-top: .9cqw; font-size: 1.6cqw; letter-spacing: .18em; text-transform: uppercase; color: #5c5040; }
+.sheet--mors .s-trk { text-align: right; font-size: 2cqw; letter-spacing: .1em; color: #5c5040; }
+.sheet--mors .s-trk b { font-family: inherit; font-weight: 400; font-size: inherit; letter-spacing: inherit; text-shadow: none; }
+.sheet--mors .s-bg {
+  position: absolute; z-index: 0; top: 50%; left: 58%; transform: translate(-50%, -50%);
+  font: 900 92cqw/1 "Playfair Display", serif; color: transparent;
+  -webkit-text-stroke: 1px rgba(176,122,56,.13); pointer-events: none;
+}
+.sheet--mors .s-drip { position: absolute; z-index: 2; left: 3.5cqw; top: 0; width: 1px; height: 52cqw; background: linear-gradient(#b07a38, rgba(176,122,56,.2)); box-shadow: 0 0 1cqw #b07a38; }
+.sheet--mors .s-drip::after { content: ""; position: absolute; left: -.8cqw; bottom: -1cqw; width: 1.7cqw; height: 1.7cqw; border-radius: 50% 50% 60% 60%; background: #b07a38; box-shadow: 0 0 2cqw #b07a38, 0 0 .7cqw #d4a050; }
+.sheet--mors :is(.s-kicker, .s-art, .s-latin, .s-scrawl, .s-lead) { position: relative; z-index: 1; }
+.sheet--mors .s-kicker { display: flex; align-items: center; gap: 2.2cqw; margin-bottom: 3cqw; font-size: 1.7cqw; letter-spacing: .22em; text-transform: uppercase; color: #b07a38; }
+.sheet--mors .s-kicker i { width: 7cqw; height: 1px; background: #b07a38; opacity: .5; }
+.sheet--mors .s-art {
+  margin: 0; font: 400 3.1cqw/1.15 "PT Mono", var(--mono); white-space: pre; color: #b07a38;
+  text-shadow: 0 0 3cqw rgba(176,122,56,.35); filter: drop-shadow(0 0 1.2cqw rgba(176,122,56,.2));
+}
+.sheet--mors .s-latin { margin: .8cqw 0 4cqw; font-size: 1.5cqw; letter-spacing: .06em; color: rgba(176,122,56,.5); white-space: nowrap; }
+.sheet--mors .s-scrawl { display: inline-block; margin-bottom: 3cqw; font: 700 5.4cqw/1.1 var(--hand); color: #b07a38; transform: rotate(-1.5deg); transform-origin: left; text-shadow: 0 0 3cqw rgba(176,122,56,.3); }
+.sheet--mors .s-lead { max-width: 66cqw; font-size: 2.6cqw; line-height: 1.7; color: #a09484; }
+.sheet--mors .s-lead em { font-style: normal; color: #d8d2c4; }
+
 /* лист, вынутый из папки, разворачивается на экран */
 .sheet--launch {
   position: fixed; z-index: 60; margin: 0; inset: auto;
@@ -770,6 +812,10 @@ body[data-fx="blot"] .fx canvas { mix-blend-mode: multiply; }
 /* VII · Жгучий атлас — жар */
 body[data-fx="heat"] .page { filter: saturate(1.6) contrast(1.05) sepia(.25) hue-rotate(-12deg); }
 body[data-fx="heat"] .fx canvas { mix-blend-mode: multiply; }
+
+/* VIII · MORS — свет гаснет, бумага темнеет до меди */
+body[data-fx="mors"] .page { filter: sepia(.8) brightness(.5) contrast(1.25); }
+body[data-fx="mors"] .fx { background: rgba(7, 6, 11, 0.45); }
 
 /* VI · BLOB — VHS-дрожь */
 body[data-fx="vhs"] .page {

@@ -127,6 +127,23 @@ const VOLUMES = [
     spine: '#e0231f', spineInk: '#fbf6ec',
     url: 'https://dmitrylelee.github.io/smth/',
   },
+  {
+    id: 'mors',
+    num: 'VIII',
+    code: '616-036.88',
+    title: 'MORS',
+    subtitle: 'Что происходит, когда мы умираем',
+    hook: 'Умирающий мозг может напоследок вспыхнуть гамма-волнами — как при ясном сознании.',
+    topic: 'клиническая смерть, мозг, распад, горе',
+    style: 'судебная тьма, медь и ASCII',
+    era: 'медь во тьме',
+    note: 'memento mori',
+    kind: 'туман',
+    tech: 'Медный туман и тлеющие искры на холсте; вдоль страницы стекает капля-прогресс, заголовки глав проявляются по буквам.',
+    effect: 'mors',
+    spine: '#07060b', spineInk: '#d4a050',
+    url: 'https://dmitrylelee.github.io/after_death/',
+  },
 ];
 
 const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
@@ -165,6 +182,13 @@ function el(tag, attrs = {}, children = []) {
 function field(dt, dd) {
   return el('div', {}, [el('dt', { text: dt }), el('dd', { text: dd })]);
 }
+
+// ASCII-титул MORS — тот же, что на обложке тома
+const MORS_ART = String.raw`  __  __  ___  ____  ____
+ |  \/  |/ _ \|  _ \/ ___|
+ | |\/| | | | | |_) \___ \
+ | |  | | |_| |  _ < ___) |
+ |_|  |_|\___/|_| \_\____/`;
 
 // титульные листы томов — в их собственной вёрстке
 const SHEETS = {
@@ -225,9 +249,18 @@ const SHEETS = {
       <p><span>капсаицин</span><b>16 000 000 SHU</b></p>
       <p><span>мишень</span><b>TRPV1</b></p>
     </div>`,
+  mors: () => `
+    <div class="s-hud"><p><b>MORS</b><small>atlas mortis et transitus · I</small></p><p class="s-trk"><b>01</b> / 16<small>Порог смерти</small></p></div>
+    <span class="s-bg" aria-hidden="true">I</span>
+    <span class="s-drip" aria-hidden="true"></span>
+    <p class="s-kicker"><i></i>tabula prima · mors<i></i></p>
+    <pre class="s-art">${MORS_ART.replace(/</g, '&lt;')}</pre>
+    <p class="s-latin">atlas mortis et transitus · scientia mortis</p>
+    <p class="s-scrawl">что там — за последней чертой?</p>
+    <p class="s-lead">Тело давно знает, как умирать — по&nbsp;одной клетке. Но&nbsp;что происходит, когда умираешь <em>весь?</em></p>`,
 };
 
-const TILTS = [-1.2, 0.9, -0.5, 1.3, -0.9, 0.6, -0.7];
+const TILTS = [-1.2, 0.9, -0.5, 1.3, -0.9, 0.6, -0.7, 1.1];
 const CHECKOUT = ['03.02', '17.05', '30.09'];
 
 function renderFolders() {
@@ -602,6 +635,34 @@ const EFFECTS = {
     }
   },
 
+  // VIII · MORS: страница гаснет, медный туман, искры и капля по краю
+  mors(c, w, h, t) {
+    c.clearRect(0, 0, w, h);
+    const fall = Math.min(1, 0.35 + t / 600);
+    const R = Math.hypot(w, h) / 2;
+    const v = c.createRadialGradient(w / 2, h / 2, R * (0.55 - 0.35 * fall), w / 2, h / 2, R);
+    v.addColorStop(0, 'rgba(7,6,11,0)'); v.addColorStop(1, 'rgba(7,6,11,.92)');
+    c.fillStyle = v; c.fillRect(0, 0, w, h);
+    for (let i = 0; i < 7; i++) {
+      const x = hash(i, 1) * w + Math.sin(t * 0.0007 + i) * 80, y = hash(1, i) * h + Math.cos(t * 0.0005 + i) * 50;
+      const r = (0.18 + hash(i, 2) * 0.22) * Math.max(w, h);
+      const gr = c.createRadialGradient(x, y, 0, x, y, r);
+      gr.addColorStop(0, 'rgba(176,122,56,.12)'); gr.addColorStop(1, 'rgba(176,122,56,0)');
+      c.fillStyle = gr; c.fillRect(0, 0, w, h);
+    }
+    const tick = Math.floor(t / 120);
+    for (let i = 0; i < 60; i++) {
+      const x = hash(i, 5) * w + Math.sin(t * 0.003 + i) * 14;
+      const y = h - ((hash(5, i) * h + t * (0.08 + hash(i, 6) * 0.18)) % h);
+      c.fillStyle = `rgba(212,160,80,${(0.35 + 0.65 * hash(i, tick)).toFixed(2)})`;
+      c.fillRect(x, y, 2, 2);
+    }
+    const dy = Math.min(h, 40 + t * 0.9);
+    c.fillStyle = 'rgba(176,122,56,.85)';
+    c.fillRect(18, 0, 1, dy);
+    c.beginPath(); c.arc(18.5, dy, 4.5, 0, Math.PI * 2); c.fill();
+  },
+
   // VI · VHS: развёртка, полоса трекинга, экранное меню
   vhs(c, w, h, t) {
     c.clearRect(0, 0, w, h);
@@ -720,6 +781,7 @@ addEventListener('pageshow', () => {
 const INK = {
   ink: '#1b1916', paper: '#efe7d6', red: '#d42a1e', pink: '#ff48b0',
   blue: '#0078bf', cyan: '#00a9c9', brick: '#c2402a', yellow: '#ffc21a',
+  copper: '#b07a38', ember: '#d4a050', void: '#07060b',
 };
 const PLATE_FONT = '"Oswald", "Arial Narrow", Impact, sans-serif';
 
@@ -918,6 +980,48 @@ const PLATE_FX = {
     for (let y = 0; y < h; y += band) {
       const sh = Math.sin(y * 0.06 + t * 0.006) * p.fs * 0.02;
       g.drawImage(p.tints.ink, 0, y * d, w * d, band * d, sh, y, w, band);
+    }
+  },
+
+  // VIII · медь во тьме: буквы награвированы медными штрихами по чёрному, сквозь туман
+  mors(p, g, w, h, t) {
+    g.fillStyle = INK.void; g.fillRect(0, 0, w, h);
+    // огромный контур за текстом, как римская цифра главы
+    g.globalAlpha = 0.16;
+    g.drawImage(p.tints.copper, p.fs * 0.035, -p.fs * 0.025 + Math.sin(t * 0.001) * p.fs * 0.01, w, h);
+    g.globalAlpha = 1;
+    const b = p.buf.getContext('2d');
+    b.setTransform(p.dpr, 0, 0, p.dpr, 0, 0);
+    b.globalCompositeOperation = 'source-over';
+    b.clearRect(0, 0, w, h);
+    b.strokeStyle = INK.copper;
+    const step = Math.max(3, p.fs / 26);
+    for (let y = -step; y < h + step; y += step) {
+      b.lineWidth = step * (0.42 + 0.3 * Math.sin(y * 0.05 + t * 0.0022));
+      b.beginPath(); b.moveTo(0, y); b.lineTo(w, y + step * 0.7); b.stroke();
+    }
+    b.setTransform(1, 0, 0, 1, 0, 0);
+    b.globalCompositeOperation = 'destination-in';
+    b.drawImage(p.mask, 0, 0);
+    g.save();
+    g.shadowColor = 'rgba(176,122,56,.6)'; g.shadowBlur = p.fs * 0.08;
+    g.drawImage(p.buf, 0, 0, w, h);
+    g.restore();
+    // медный туман ползёт поперёк
+    for (let i = 0; i < 4; i++) {
+      const x = ((hash(i, 8) * w + t * (0.03 + hash(i, 9) * 0.04)) % (w * 1.4)) - w * 0.2;
+      const y = hash(8, i) * h, r = (0.3 + hash(i, 7) * 0.3) * h;
+      const gr = g.createRadialGradient(x, y, 0, x, y, r);
+      gr.addColorStop(0, 'rgba(176,122,56,.13)'); gr.addColorStop(1, 'rgba(176,122,56,0)');
+      g.fillStyle = gr; g.fillRect(0, 0, w, h);
+    }
+    // тлеющие искры
+    const tick = Math.floor(t / 110);
+    for (let i = 0; i < 40; i++) {
+      const x = hash(i, 11) * w + Math.sin(t * 0.002 + i) * 8;
+      const y = h - ((hash(11, i) * h + t * (0.02 + hash(i, 12) * 0.05)) % h);
+      g.fillStyle = hash(i, tick) > 0.5 ? INK.ember : INK.copper;
+      g.fillRect(x, y, 2, 2);
     }
   },
 
