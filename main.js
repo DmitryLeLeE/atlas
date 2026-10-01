@@ -130,6 +130,7 @@ const VOLUMES = [
 ];
 
 const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
+const isMobile = matchMedia('(max-width: 759px) or (hover: none) and (pointer: coarse)');
 const $ = (s, r = document) => r.querySelector(s);
 const byId = id => VOLUMES.find(v => v.id === id);
 
@@ -303,13 +304,13 @@ function renderFolders() {
     if (!f || f.contains(e.relatedTarget)) return;
     closeOthers(f); setOpen(f, true);
     peek(byId(f.dataset.id));
-  });
+  }, { passive: true });
   list.addEventListener('pointerout', e => {
     if (e.pointerType !== 'mouse') return;
     const f = e.target.closest('.folder');
     if (!f || f.contains(e.relatedTarget)) return;
     setOpen(f, false);
-  });
+  }, { passive: true });
   list.addEventListener('click', e => {
     const f = e.target.closest('.folder');
     if (!f) return;
@@ -442,7 +443,7 @@ const fx = {
 fx.ctx = fx.canvas.getContext('2d');
 
 function sizeFx() {
-  const dpr = Math.min(devicePixelRatio || 1, 1.5);
+  const dpr = isMobile.matches ? 1 : Math.min(devicePixelRatio || 1, 1.5);
   fx.w = innerWidth; fx.h = innerHeight;
   fx.canvas.width = Math.round(fx.w * dpr);
   fx.canvas.height = Math.round(fx.h * dpr);
@@ -496,7 +497,9 @@ const EFFECTS = {
     c.fill();
     c.globalAlpha = 1;
     const seed = Math.floor(t / 50);
-    for (let i = 0; i < 2600; i++) {
+    // на мобильном уменьшаем зерно вдвое
+    const grainCount = isMobile.matches ? 1300 : 2600;
+    for (let i = 0; i < grainCount; i++) {
       const x = hash(i, seed) * w, y = hash(seed, i * 1.7) * h;
       c.fillStyle = i & 1 ? 'rgba(255,72,176,.55)' : 'rgba(0,120,191,.55)';
       c.fillRect(x, y, 2, 2);
@@ -605,11 +608,19 @@ const EFFECTS = {
   // VI · VHS: развёртка, полоса трекинга, экранное меню
   vhs(c, w, h, t) {
     c.clearRect(0, 0, w, h);
-    c.fillStyle = 'rgba(0,0,0,.22)';
-    for (let y = 0; y < h; y += 3) c.fillRect(0, y, w, 1);
+    // сканлайны: на мобильном одним прямоугольником через градиент вместо цикла
+    if (isMobile.matches) {
+      c.fillStyle = 'rgba(0,0,0,.18)';
+      c.fillRect(0, 0, w, h);
+    } else {
+      c.fillStyle = 'rgba(0,0,0,.22)';
+      for (let y = 0; y < h; y += 3) c.fillRect(0, y, w, 1);
+    }
     const band = ((t * 0.5) % (h + 120)) - 60;
     const seed = Math.floor(t / 40);
-    for (let i = 0; i < 220; i++) {
+    // на мобильном меньше глитч-полос
+    const bandCount = isMobile.matches ? 110 : 220;
+    for (let i = 0; i < bandCount; i++) {
       const y = band + (hash(i, seed) - 0.5) * 70;
       const x = hash(seed, i) * w;
       c.fillStyle = `rgba(255,255,255,${0.3 + hash(i, i) * 0.5})`;
@@ -633,6 +644,8 @@ const EFFECTS = {
 
 function peek(vol, force = false) {
   if (!vol) return;
+  // на мобильных fx-overlay тяжёлый и не нужен при простом открытии папки
+  if (isMobile.matches && !force) return;
   const now = performance.now();
   // тот же том подряд не перекрашиваем чаще раза в полторы секунды
   if (!force && fx.current === vol.id && now - fx.last < 1500) return;
@@ -735,7 +748,7 @@ function tintOf(mask, color) {
 
 // p — «печатная форма»: холст, маска слова, краски
 function makePlate(canvas, lines, W, maxH = 0, fill = 0.96) {
-  const dpr = Math.min(devicePixelRatio || 1, 1.5);
+  const dpr = isMobile.matches ? 1 : Math.min(devicePixelRatio || 1, 1.5);
   const probe = document.createElement('canvas').getContext('2d');
   probe.font = `700 100px ${PLATE_FONT}`;
   const w100 = Math.max(...lines.map(l => probe.measureText(l).width));
@@ -767,14 +780,16 @@ function makePlate(canvas, lines, W, maxH = 0, fill = 0.96) {
   m.filter = 'none';
   // износ: краска не легла в случайных точках
   m.globalCompositeOperation = 'destination-out';
-  const specks = Math.round(w * h / 170);
+  const wearDivider = isMobile.matches ? 340 : 170;
+  const specks = Math.round(w * h / wearDivider);
   for (let i = 0; i < specks; i++) {
     const r = Math.random() < 0.95 ? Math.random() * 0.9 + 0.3 : Math.random() * 2 + 0.8;
     m.beginPath(); m.arc(Math.random() * w, Math.random() * h, r, 0, Math.PI * 2); m.fill();
   }
   // пара продольных царапин
   m.lineWidth = 0.8;
-  for (let i = 0; i < 3; i++) {
+  const scratchCount = isMobile.matches ? 1 : 3;
+  for (let i = 0; i < scratchCount; i++) {
     const y = Math.random() * h;
     m.beginPath(); m.moveTo(0, y); m.lineTo(w, y + (Math.random() - 0.5) * 6); m.stroke();
   }
@@ -830,7 +845,8 @@ const PLATE_FX = {
     g.drawImage(p.tints.pink, -o + dx, dy, w, h);
     g.drawImage(p.tints.blue, o - dx, -dy, w, h);
     g.globalCompositeOperation = 'source-over';
-    const seed = Math.floor(t / 70), n = Math.round(w * h / 260);
+    const seed = Math.floor(t / 70);
+    const n = Math.round(w * h / (isMobile.matches ? 520 : 260));
     for (let i = 0; i < n; i++) {
       g.fillStyle = i & 1 ? 'rgba(255,72,176,.45)' : 'rgba(0,120,191,.45)';
       g.fillRect(hash(i, seed) * w, hash(seed, i * 1.3) * h, 1.4, 1.4);
@@ -937,7 +953,12 @@ const PLATE_FX = {
       g.drawImage(g.canvas, 0, y * d, w * d, bh * d, sh, y, w, bh);
     }
     g.fillStyle = 'rgba(239,231,214,.45)';
-    for (let y = 0; y < h; y += 3) g.fillRect(0, y, w, 1);
+    if (isMobile.matches) {
+      // на мобильном — одним fillRect вместо цикла
+      g.fillRect(0, 0, w, h);
+    } else {
+      for (let y = 0; y < h; y += 3) g.fillRect(0, y, w, 1);
+    }
   },
 };
 
@@ -994,14 +1015,15 @@ function heroSetStyle(i, pin = false) {
   if (reduceMotion.matches && hero.p) drawPlate(hero.p, HERO_ORDER[hero.idx], 0, hero.lens);
 }
 
-// кадр раз в ~40 мс; пока страница «перекрашена» или открывается книга — пауза
+// кадр раз в ~40 мс на десктопе, ~66 мс на мобильном; пока страница «перекрашена» или открывается книга — пауза
 function heroLoop(now) {
   hero.raf = 0;
   if (!hero.visible || !hero.p) return;
   const busy = opening || fx.root.classList.contains('on');
+  const frameMs = isMobile.matches ? 66 : 40;
   if (!busy) {
     if (!hero.pinned && now - hero.since > HERO_SLOT) heroSetStyle(hero.idx + 1);
-    if (now - hero.last > 40) { hero.last = now; drawPlate(hero.p, HERO_ORDER[hero.idx], now, hero.lens); }
+    if (now - hero.last > frameMs) { hero.last = now; drawPlate(hero.p, HERO_ORDER[hero.idx], now, hero.lens); }
   } else hero.since += 16;
   hero.raf = requestAnimationFrame(heroLoop);
 }
