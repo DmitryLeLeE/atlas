@@ -42,7 +42,7 @@ body {
     radial-gradient(ellipse 120% 90% at 50% 40%, transparent 55%, rgba(120, 90, 40, 0.14)),
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .27 0 0 0 0 .16 0 0 0 .22 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='600'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.004 .06' numOctaves='2' seed='4'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .4 0 0 0 0 .25 0 0 0 .10 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3C/svg%3E");
-  background-attachment: fixed, scroll, scroll;
+  background-attachment: scroll, scroll, scroll;
   overflow-x: hidden;
   overflow-x: clip;
   min-height: 100vh;
@@ -794,7 +794,13 @@ body[data-fx="vhs"] .fx { background: rgba(20, 0, 60, 0.14); }
    ============================================================ */
 
 @media (max-width: 759px) {
-  body { font-size: 16px; }
+  body {
+    font-size: 16px;
+    /* убираем крупный 600px SVG-слой фона — дорого тайлить */
+    background-image:
+      radial-gradient(ellipse 120% 90% at 50% 40%, transparent 55%, rgba(120, 90, 40, 0.14)),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .27 0 0 0 0 .16 0 0 0 .22 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
   .hero { min-height: auto; padding-bottom: 20px; }
   .hero-bar-mid { display: none; }
   .hero-head { padding-top: 48px; }
@@ -814,6 +820,36 @@ body[data-fx="vhs"] .fx { background: rgba(20, 0, 60, 0.14); }
   .colophon { padding: 28px 16px 18px; transform: none; }
   .colophon::before { left: 10px; }
   .fx-tag { left: 16px; right: 16px; top: 12px; font-size: 11px; }
+
+  /* ---- Мобильная производительность ---- */
+  /* SVG displacement-фильтры (ink-edge, wobble) создают дорогостоящий
+     software-render слой; на мобильном убираем их */
+  .hero-bar,
+  .hero-warn,
+  .hero-stamp,
+  .kicker-arrow,
+  .cf-tie::after,
+  .scribble,
+  .btn-ring { filter: none; }
+  .stamp,
+  .imprint-stamp { filter: none; }
+
+  /* will-change только на реально анимируемых элементах */
+  .folder-cover { will-change: transform; }
+  .ticker-track { will-change: transform; }
+
+  /* content-visibility: секции ниже первого экрана рендерятся лениво */
+  .manifesto { content-visibility: auto; contain-intrinsic-size: auto 420px; }
+  .howto     { content-visibility: auto; contain-intrinsic-size: auto 560px; }
+  .colophon  { content-visibility: auto; contain-intrinsic-size: auto 280px; }
+
+  /* CSS 3D perspective создаёт compositor layer на каждую папку;
+     на мобильном используем упрощённый flip без GPU-слоя */
+  .folder-body { perspective: none; }
+  .folder-cover { transform-style: flat; }
+  .cover-front,
+  .cover-inside { backface-visibility: visible; -webkit-backface-visibility: visible; }
+  .folder.is-open .folder-cover { transform: rotateX(172deg); }
 }
 
 /* ============================================================
